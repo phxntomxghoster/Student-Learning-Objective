@@ -28,11 +28,15 @@
             transition: 0.2s;
         }
         .btn:hover { background: #30363d; border-color: #8b949e; color: #ffffff; }
+        .return-btn {
+            background: #1f6feb;
+            color: #ffffff;
+            border-color: #388bfd;
+        }
         hr { border: 0; border-top: 1px solid #30363d; margin: 25px 0; }
         ul { list-style-type: none; padding: 0; }
         li { margin-bottom: 10px; }
         li::before { content: "• "; color: #58a6ff; }
-        .secret-exit { color: #0d1117; text-decoration: none; cursor: default; }
     </style>
 </head>
 <body>
@@ -55,8 +59,9 @@
         <li><a href="https://retrobowl.me/" class="btn" target="_blank">Launch Module_06 (Strategy Array)</a></li>
     </ul>
 
-    <br><br>
-    <!-- The stealth "Emergency Exit" back to index.html -->
-    <a href="index.html" class="secret-exit">.</a>
+    <hr>
+    <!-- New Return Button -->
+    <div class="log-entry">> System navigation options:</div>
+    <a href="index.html" class="btn return-btn">Return to Primary Hub</a>
 </body>
 </html>
