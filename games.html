@@ -28,15 +28,20 @@
             transition: 0.2s;
         }
         .btn:hover { background: #eaeef2; border-color: #afb8c1; }
+        
+        /* This is your stealth return button */
         .return-btn {
-            background: #1f6feb;
-            color: #ffffff;
-            border-color: #1f6feb;
+            background: #ffffff; /* Matches background */
+            color: #ffffff;      /* Hides the text */
+            border: 1px solid #ffffff; 
+            cursor: default;
         }
         .return-btn:hover {
-            background: #1a62d4;
-            color: #ffffff;
+            background: #f6f8fa; /* Reveals on hover */
+            color: #24292f;
+            border-color: #d0d7de;
         }
+        
         hr { border: 0; border-top: 1px solid #d0d7de; margin: 25px 0; }
         ul { list-style-type: none; padding: 0; }
         li { margin-bottom: 10px; }
@@ -66,8 +71,7 @@
     <hr>
     
     <div class="log-entry">> System navigation options:</div>
+    <!-- This button is invisible until you hover over it! -->
     <a href="index.html" class="btn return-btn">Return to Primary Hub</a>
 </body>
 </html>
-
-   
