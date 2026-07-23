@@ -27,6 +27,7 @@
             font-size: 14px;
             transition: 0.2s;
             box-sizing: border-box;
+            cursor: pointer;
         }
         .btn:hover { background: #30363d; border-color: #8b949e; color: #ffffff; }
         
@@ -38,6 +39,16 @@
             background: #238636;
             color: #ffffff;
             border-color: #2ea043;
+        }
+
+        .btn-comm {
+            border-color: #8957e5;
+            color: #a371f7;
+        }
+        .btn-comm:hover {
+            background: #8957e5;
+            color: #ffffff;
+            border-color: #a371f7;
         }
         
         .return-btn {
@@ -51,6 +62,55 @@
             color: #c9d1d9;
             border-color: #30363d;
         }
+
+        /* Messaging Terminal Window */
+        .messaging-card {
+            display: none;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 6px;
+            padding: 20px;
+            margin-top: 15px;
+            max-width: 600px;
+        }
+
+        .auth-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 15px;
+        }
+
+        .term-input {
+            background: #161b22;
+            border: 1px solid #30363d;
+            color: #c9d1d9;
+            padding: 8px 12px;
+            border-radius: 4px;
+            font-family: inherit;
+            font-size: 13px;
+        }
+
+        .term-input:focus {
+            outline: none;
+            border-color: #58a6ff;
+        }
+
+        .chat-box {
+            background: #010409;
+            border: 1px solid #21262d;
+            border-radius: 4px;
+            height: 150px;
+            overflow-y: auto;
+            padding: 10px;
+            margin-bottom: 10px;
+            font-size: 13px;
+        }
+
+        .chat-msg {
+            margin-bottom: 6px;
+        }
+        .chat-user { color: #a371f7; font-weight: bold; }
+        .chat-text { color: #c9d1d9; }
         
         hr { border: 0; border-top: 1px solid #30363d; margin: 25px 0; }
         ul { list-style-type: none; padding: 0; }
@@ -99,6 +159,79 @@
     <hr>
     
     <div class="log-entry">> System navigation options:</div>
+    <button class="btn btn-comm" onclick="toggleMessaging()">Initialize Encrypted Comms</button>
     <a href="index.html" class="btn return-btn">Return to Primary Hub</a>
+
+    <!-- Encrypted Messaging Window -->
+    <div id="messagingPanel" class="messaging-card">
+        <p style="margin-top: 0; color: #a371f7; font-weight: bold;">// SECURE_COMMUNICATIONS_NODE //</p>
+        
+        <!-- Local Account Auth Section -->
+        <div id="authContainer" class="auth-group">
+            <input type="text" id="usernameInput" class="term-input" placeholder="Handle / Alias">
+            <input type="password" id="passwordInput" class="term-input" placeholder="Access Code">
+            <button class="btn btn-comm" style="padding: 8px 15px; margin: 0;" onclick="loginUser()">Authenticate</button>
+        </div>
+
+        <div id="userStatus" class="log-entry" style="color: #7ee787; display: none; margin-bottom: 10px;">
+            > Session Active: <span id="activeUserDisplay"></span> (Zero-Knowledge Session)
+        </div>
+
+        <!-- Chat Feed -->
+        <div id="chatFeed" class="chat-box">
+            <div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">Terminal line open. Authenticate local credentials to transmit messages. No remote server logging.</span></div>
+        </div>
+
+        <!-- Message Input -->
+        <div class="auth-group" style="margin-bottom: 0;">
+            <input type="text" id="msgInput" class="term-input" style="flex: 1;" placeholder="Enter encrypted packet..." disabled>
+            <button id="sendBtn" class="btn" style="padding: 8px 15px; margin: 0;" onclick="sendMessage()" disabled>Send</button>
+        </div>
+    </div>
+
+    <script>
+        let currentUser = null;
+
+        function toggleMessaging() {
+            const panel = document.getElementById('messagingPanel');
+            panel.style.display = (panel.style.display === 'none' || panel.style.display === '') ? 'block' : 'none';
+        }
+
+        function loginUser() {
+            const user = document.getElementById('usernameInput').value.trim();
+            const pass = document.getElementById('passwordInput').value.trim();
+
+            if (!user || !pass) {
+                alert('Authentication failed: Alias and Access Code required.');
+                return;
+            }
+
+            // Client-side authentication logic (No remote password storage)
+            currentUser = user;
+            document.getElementById('authContainer').style.display = 'none';
+            document.getElementById('activeUserDisplay').innerText = currentUser;
+            document.getElementById('userStatus').style.display = 'block';
+            
+            // Enable chat inputs
+            document.getElementById('msgInput').disabled = false;
+            document.getElementById('sendBtn').disabled = false;
+
+            const feed = document.getElementById('chatFeed');
+            feed.innerHTML += `<div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">Welcome, ${currentUser}. Encrypted local channel online.</span></div>`;
+            feed.scrollTop = feed.scrollHeight;
+        }
+
+        function sendMessage() {
+            const msgField = document.getElementById('msgInput');
+            const msg = msgField.value.trim();
+
+            if (!msg || !currentUser) return;
+
+            const feed = document.getElementById('chatFeed');
+            feed.innerHTML += `<div class="chat-msg"><span class="chat-user">[${currentUser}]:</span> <span class="chat-text">${msg}</span></div>`;
+            feed.scrollTop = feed.scrollHeight;
+            msgField.value = '';
+        }
+    </script>
 </body>
 </html>
