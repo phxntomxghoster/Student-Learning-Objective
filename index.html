@@ -2,25 +2,286 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <title>Teacher Instructional Portal</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>District Staff Portal | Dashboard</title>
     <style>
-        body { font-family: sans-serif; padding: 50px; line-height: 1.6; color: #333; }
-        h1 { color: #2c3e50; }
-        .folder { color: #2980b9; cursor: pointer; text-decoration: underline; }
+        :root {
+            --bg-body: #f4f7f9;
+            --header-bg: #0f172a;
+            --card-bg: #ffffff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --accent: #0ea5e9;
+            --border-light: #e2e8f0;
+        }
+
+        * { box-sizing: border-box; }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            margin: 0;
+            padding: 0;
+            line-height: 1.6;
+        }
+
+        /* Top Navigation Bar */
+        .navbar {
+            background-color: var(--header-bg);
+            color: white;
+            padding: 15px 40px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .navbar h1 {
+            margin: 0;
+            font-size: 1.4rem;
+            letter-spacing: 0.5px;
+        }
+
+        .navbar .user-profile {
+            font-size: 0.9rem;
+            color: #cbd5e1;
+        }
+
+        /* Dashboard Layout */
+        .container {
+            max-width: 1200px;
+            margin: 40px auto;
+            padding: 0 20px;
+            display: grid;
+            grid-template-columns: 2fr 1fr;
+            gap: 25px;
+        }
+
+        .card {
+            background: var(--card-bg);
+            border: 1px solid var(--border-light);
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        .card-header {
+            font-size: 1.15rem;
+            font-weight: 600;
+            color: #334155;
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--border-light);
+            padding-bottom: 10px;
+        }
+
+        /* AI Assistant Widget */
+        .ai-widget {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            padding: 15px;
+        }
+
+        .ai-output {
+            background: #ffffff;
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            padding: 15px;
+            height: 140px;
+            overflow-y: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 0.85rem;
+            color: #475569;
+            margin-bottom: 15px;
+        }
+
+        .ai-input-group {
+            display: flex;
+            gap: 10px;
+        }
+
+        .ai-input {
+            flex: 1;
+            padding: 10px 15px;
+            border: 1px solid var(--border-light);
+            border-radius: 6px;
+            font-size: 0.95rem;
+            outline: none;
+        }
+
+        .ai-input:focus {
+            border-color: var(--accent);
+        }
+
+        .ai-btn {
+            background-color: var(--accent);
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .ai-btn:hover { background-color: #0284c7; }
+
+        /* Links List */
+        ul.links-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        ul.links-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #f1f5f9;
+        }
+
+        ul.links-list li:last-child { border-bottom: none; }
+
+        ul.links-list a {
+            color: var(--text-main);
+            text-decoration: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        ul.links-list a:hover { color: var(--accent); }
+
+        /* Sidebar Announcements */
+        .announcement {
+            background: #eff6ff;
+            border-left: 4px solid var(--accent);
+            padding: 12px 15px;
+            margin-bottom: 15px;
+            border-radius: 0 6px 6px 0;
+            font-size: 0.9rem;
+        }
+
+        .announcement-date {
+            font-size: 0.75rem;
+            color: var(--text-muted);
+            font-weight: bold;
+            margin-bottom: 3px;
+        }
+
+        /* Footer & Stealth Door */
+        .footer {
+            text-align: center;
+            padding: 40px 20px;
+            font-size: 0.8rem;
+            color: #94a3b8;
+            margin-top: 20px;
+        }
+
+        /* The Trapdoor */
+        .stealth-link {
+            color: inherit;
+            text-decoration: none;
+            cursor: text; /* Prevents the finger pointer, makes it look like normal text */
+        }
     </style>
 </head>
 <body>
-    <h1>District Instructional Delivery Hub</h1>
-    <p>Welcome to the central repository for the 2026-2027 school year. Please use the links below to access curriculum standards and professional development modules.</p>
-    
-    <h3>Active Directories:</h3>
-    <ul>
-        <li><span class="folder">Common Core Mathematics - Module 1</span></li>
-        <li><span class="folder">ELA Literacy Standards - Primary Sources</span></li>
-        <li><span class="folder">Social Studies Digital Archives</span></li>
-    </ul>
 
-    <!-- This is your secret door. It looks like a version number to anyone else. -->
-    <p style="margin-top: 100px; color: #ccc; font-size: 10px;">Build Version: 1.0.4 - <a href="games.html" style="color: #ccc; text-decoration: none;">System Check</a></p>
+    <div class="navbar">
+        <h1>Central Administration Hub</h1>
+        <div class="user-profile">Status: Authenticated Educator</div>
+    </div>
+
+    <div class="container">
+        <!-- Left Column: Main Tools -->
+        <div class="main-column">
+            
+            <!-- Curriculum AI Box -->
+            <div class="card" style="margin-bottom: 25px;">
+                <div class="card-header">Integrated AI Lesson Planner</div>
+                <p style="font-size: 0.9rem; color: var(--text-muted); margin-top: 0;">Generate scaffolded classroom activities, diagnostic quizzes, and state-standard rubrics.</p>
+                
+                <div class="ai-widget">
+                    <div id="aiLog" class="ai-output">
+                        > System Initialized...<br>
+                        > District knowledge base loaded.<br>
+                        > Awaiting curriculum prompt...
+                    </div>
+                    <div class="ai-input-group">
+                        <input type="text" id="aiQuery" class="ai-input" placeholder="e.g., Draft a 45-minute lesson plan for cell biology...">
+                        <button class="ai-btn" onclick="runAIAssistant()">Generate</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Active Modules -->
+            <div class="card">
+                <div class="card-header">Curriculum Directories</div>
+                <ul class="links-list">
+                    <li><a href="#"><span>Common Core Mathematics - Module 1</span> <span>&rarr;</span></a></li>
+                    <li><a href="#"><span>ELA Literacy Standards - Primary Sources</span> <span>&rarr;</span></a></li>
+                    <li><a href="#"><span>Social Studies Digital Archives (2026)</span> <span>&rarr;</span></a></li>
+                    <li><a href="#"><span>Next Generation Science Standards (NGSS)</span> <span>&rarr;</span></a></li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- Right Column: Sidebar -->
+        <div class="sidebar">
+            <div class="card" style="margin-bottom: 25px;">
+                <div class="card-header">District Announcements</div>
+                
+                <div class="announcement">
+                    <div class="announcement-date">JULY 22, 2026</div>
+                    <div>Reminder: Q1 Curriculum pacing guides must be submitted by the end of the week.</div>
+                </div>
+                
+                <div class="announcement">
+                    <div class="announcement-date">JULY 20, 2026</div>
+                    <div>System update complete. All staff passwords must be rotated within 14 days.</div>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">Quick Links</div>
+                <ul class="links-list" style="font-size: 0.9rem;">
+                    <li><a href="#">Staff Email Portal</a></li>
+                    <li><a href="#">Gradebook Access</a></li>
+                    <li><a href="#">Help Desk Ticket Submission</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- Hidden Bridge in the Footer -->
+    <div class="footer">
+        © 2026-2027 District Administration. All rights reserved.<br>
+        Build Version: 1.0.4 — <a href="games.html" class="stealth-link">System Check</a> Active | Secure Gateway
+    </div>
+
+    <script>
+        function runAIAssistant() {
+            const inputField = document.getElementById('aiQuery');
+            const logBox = document.getElementById('aiLog');
+            const query = inputField.value.trim();
+
+            if (!query) return;
+
+            // Simulating AI thought process for realism
+            logBox.innerHTML += `<br><br>> User: "${query}"`;
+            logBox.scrollTop = logBox.scrollHeight;
+            inputField.value = '';
+
+            setTimeout(() => {
+                logBox.innerHTML += `<br>> Compiling framework parameters...`;
+                logBox.scrollTop = logBox.scrollHeight;
+            }, 600);
+
+            setTimeout(() => {
+                logBox.innerHTML += `<br>> Success: Standardized rubric and pacing guide generated. Ready for export.`;
+                logBox.scrollTop = logBox.scrollHeight;
+            }, 1500);
+        }
+    </script>
 </body>
 </html>
