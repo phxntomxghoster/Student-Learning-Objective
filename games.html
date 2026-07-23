@@ -6,7 +6,7 @@
     <title>System Diagnostic v1.1.2</title>
     <style>
         body {
-            background-color: #000000; /* Pure Black */
+            background-color: #000000;
             color: #58a6ff;
             font-family: 'Courier New', Courier, monospace;
             padding: 40px;
@@ -26,6 +26,7 @@
             border-radius: 6px;
             font-size: 14px;
             transition: 0.2s;
+            box-sizing: border-box;
         }
         .btn:hover { background: #30363d; border-color: #8b949e; color: #ffffff; }
         
@@ -38,18 +39,7 @@
             color: #ffffff;
             border-color: #2ea043;
         }
-
-        .btn-restricted {
-            border-color: #da3633;
-            color: #f85149;
-        }
-        .btn-restricted:hover {
-            background: #da3633;
-            color: #ffffff;
-            border-color: #f85149;
-        }
         
-        /* Stealth return button - invisible on black background */
         .return-btn {
             background: #000000;
             color: #000000;
@@ -95,21 +85,12 @@
 
     <hr>
 
-    <p>// CLOUD STREAMING & CONSOLE INFRASTRUCTURE (Direct Game Links) //</p>
+    <p>// CLOUD STREAMING & CONSOLE INFRASTRUCTURE //</p>
     <ul>
         <li><a href="https://www.xbox.com/en-US/play/gallery/fortnite" class="btn btn-stream" target="_blank">Stream Fortn*te (xCloud Direct)</a></li>
-        <li><a href="https://www.xbox.com/en-US/play/gallery/gta-v" class="btn btn-stream" target="_blank">Stream Grand Theft Auto V (xCloud Direct)</a></li>
         <li><a href="https://www.xbox.com/en-US/play/gallery/forza-horizon-5" class="btn btn-stream" target="_blank">Stream Forza Horizon 5 (xCloud Direct)</a></li>
         <li><a href="https://www.xbox.com/en-US/play/gallery/minecraft" class="btn btn-stream" target="_blank">Stream Minecraft (xCloud Direct)</a></li>
         <li><a href="https://now.gg" class="btn btn-stream" target="_blank">Launch now.gg Container Hub</a></li>
-    </ul>
-
-    <hr>
-
-    <p>// RESTRICTED ARCHIVES (16+) //</p>
-    <ul>
-        <li><a href="#" class="btn btn-restricted" onclick="alert('Accessing Retro Physics Archive...'); return false;">Mount Archive_01 (GTA Legacy)</a></li>
-        <li><a href="#" class="btn btn-restricted" onclick="alert('Accessing Advanced Sandbox Module...'); return false;">Mount Archive_02 (GTA Modern Suite)</a></li>
     </ul>
 
     <hr>
