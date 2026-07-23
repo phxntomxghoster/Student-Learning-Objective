@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Diagnostic v1.1.2</title>
+    <title>System Diagnostic v1.2.0</title>
     <style>
         body {
             background-color: #000000;
@@ -119,13 +119,13 @@
     </style>
 </head>
 <body>
-    <h1>> SYSTEM_DIAGNOSTIC_v1.1.2</h1>
+    <h1>> SYSTEM_DIAGNOSTIC_v1.2.0</h1>
     <div class="status">Status: ENCRYPTED_CONNECTION_ACTIVE // BUILD_STABLE</div>
     
     <div class="log-entry">> Initializing local environment...</div>
     <div class="log-entry">> Bypassing standard gateway...</div>
     <div class="log-entry">> Establishing passthrough engine...</div>
-    <div class="log-entry">> Hotfix v1.1.2 applied: Stream routing optimized.</div>
+    <div class="log-entry">> System upgraded to v1.2.0: Auth sequence hardened.</div>
 
     <hr>
     
@@ -164,7 +164,7 @@
 
     <!-- Encrypted Messaging Window -->
     <div id="messagingPanel" class="messaging-card">
-        <p style="margin-top: 0; color: #a371f7; font-weight: bold;">// SECURE_COMMUNICATIONS_NODE //</p>
+        <p style="margin-top: 0; color: #a371f7; font-weight: bold;">// SECURE_COMMUNICATIONS_NODE v1.2.0 //</p>
         
         <!-- Local Account Auth Section -->
         <div id="authContainer" class="auth-group">
@@ -179,7 +179,7 @@
 
         <!-- Chat Feed -->
         <div id="chatFeed" class="chat-box">
-            <div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">Terminal line open. Authenticate local credentials to transmit messages. No remote server logging.</span></div>
+            <div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">v1.2.0 active. Authenticate credentials to activate terminal line.</span></div>
         </div>
 
         <!-- Message Input -->
@@ -192,6 +192,10 @@
     <script>
         let currentUser = null;
 
+        // Preset Access Credentials
+        const VALID_USER = "phxntom";
+        const VALID_PASS = "1234";
+
         function toggleMessaging() {
             const panel = document.getElementById('messagingPanel');
             panel.style.display = (panel.style.display === 'none' || panel.style.display === '') ? 'block' : 'none';
@@ -201,24 +205,22 @@
             const user = document.getElementById('usernameInput').value.trim();
             const pass = document.getElementById('passwordInput').value.trim();
 
-            if (!user || !pass) {
-                alert('Authentication failed: Alias and Access Code required.');
-                return;
+            if (user === VALID_USER && pass === VALID_PASS) {
+                currentUser = user;
+                document.getElementById('authContainer').style.display = 'none';
+                document.getElementById('activeUserDisplay').innerText = currentUser;
+                document.getElementById('userStatus').style.display = 'block';
+                
+                // Enable chat inputs
+                document.getElementById('msgInput').disabled = false;
+                document.getElementById('sendBtn').disabled = false;
+
+                const feed = document.getElementById('chatFeed');
+                feed.innerHTML += `<div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">Welcome, ${currentUser}. Encrypted local channel online.</span></div>`;
+                feed.scrollTop = feed.scrollHeight;
+            } else {
+                alert('ACCESS DENIED: Invalid Handle or Access Code.');
             }
-
-            // Client-side authentication logic (No remote password storage)
-            currentUser = user;
-            document.getElementById('authContainer').style.display = 'none';
-            document.getElementById('activeUserDisplay').innerText = currentUser;
-            document.getElementById('userStatus').style.display = 'block';
-            
-            // Enable chat inputs
-            document.getElementById('msgInput').disabled = false;
-            document.getElementById('sendBtn').disabled = false;
-
-            const feed = document.getElementById('chatFeed');
-            feed.innerHTML += `<div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">Welcome, ${currentUser}. Encrypted local channel online.</span></div>`;
-            feed.scrollTop = feed.scrollHeight;
         }
 
         function sendMessage() {
