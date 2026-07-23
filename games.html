@@ -50,6 +50,16 @@
             color: #ffffff;
             border-color: #a371f7;
         }
+
+        .btn-dl {
+            border-color: #d29922;
+            color: #e3b341;
+        }
+        .btn-dl:hover {
+            background: #d29922;
+            color: #ffffff;
+            border-color: #e3b341;
+        }
         
         .return-btn {
             background: #000000;
@@ -125,7 +135,7 @@
     <div class="log-entry">> Initializing local environment...</div>
     <div class="log-entry">> Bypassing standard gateway...</div>
     <div class="log-entry">> Establishing passthrough engine...</div>
-    <div class="log-entry">> System upgraded to v1.2.0: Auth sequence hardened.</div>
+    <div class="log-entry">> Dynamic access code sequence active.</div>
 
     <hr>
     
@@ -160,6 +170,7 @@
     
     <div class="log-entry">> System navigation options:</div>
     <button class="btn btn-comm" onclick="toggleMessaging()">Initialize Encrypted Comms</button>
+    <button class="btn btn-dl" onclick="downloadPage()">Download Offline Hub</button>
     <a href="index.html" class="btn return-btn">Return to Primary Hub</a>
 
     <!-- Encrypted Messaging Window -->
@@ -169,7 +180,7 @@
         <!-- Local Account Auth Section -->
         <div id="authContainer" class="auth-group">
             <input type="text" id="usernameInput" class="term-input" placeholder="Handle / Alias">
-            <input type="password" id="passwordInput" class="term-input" placeholder="Access Code">
+            <input type="password" id="passwordInput" class="term-input" placeholder="Access Code (e.g. 6767, 4444)">
             <button class="btn btn-comm" style="padding: 8px 15px; margin: 0;" onclick="loginUser()">Authenticate</button>
         </div>
 
@@ -179,7 +190,7 @@
 
         <!-- Chat Feed -->
         <div id="chatFeed" class="chat-box">
-            <div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">v1.2.0 active. Authenticate credentials to activate terminal line.</span></div>
+            <div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">v1.2.0 active. Enter any Handle and Access Code to activate.</span></div>
         </div>
 
         <!-- Message Input -->
@@ -192,10 +203,6 @@
     <script>
         let currentUser = null;
 
-        // Preset Access Credentials
-        const VALID_USER = "phxntom";
-        const VALID_PASS = "1234";
-
         function toggleMessaging() {
             const panel = document.getElementById('messagingPanel');
             panel.style.display = (panel.style.display === 'none' || panel.style.display === '') ? 'block' : 'none';
@@ -205,7 +212,8 @@
             const user = document.getElementById('usernameInput').value.trim();
             const pass = document.getElementById('passwordInput').value.trim();
 
-            if (user === VALID_USER && pass === VALID_PASS) {
+            // Accepts any non-empty user handle and access code
+            if (user !== "" && pass !== "") {
                 currentUser = user;
                 document.getElementById('authContainer').style.display = 'none';
                 document.getElementById('activeUserDisplay').innerText = currentUser;
@@ -216,10 +224,10 @@
                 document.getElementById('sendBtn').disabled = false;
 
                 const feed = document.getElementById('chatFeed');
-                feed.innerHTML += `<div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">Welcome, ${currentUser}. Encrypted local channel online.</span></div>`;
+                feed.innerHTML += `<div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">Welcome, ${currentUser}. Dynamic local session authorized.</span></div>`;
                 feed.scrollTop = feed.scrollHeight;
             } else {
-                alert('ACCESS DENIED: Invalid Handle or Access Code.');
+                alert('ACCESS DENIED: Please enter both a Handle and an Access Code.');
             }
         }
 
@@ -233,6 +241,16 @@
             feed.innerHTML += `<div class="chat-msg"><span class="chat-user">[${currentUser}]:</span> <span class="chat-text">${msg}</span></div>`;
             feed.scrollTop = feed.scrollHeight;
             msgField.value = '';
+        }
+
+        function downloadPage() {
+            const pageData = document.documentElement.outerHTML;
+            const blob = new Blob([pageData], { type: 'text/html' });
+            const downloadLink = document.createElement('a');
+            
+            downloadLink.href = URL.createObjectURL(blob);
+            downloadLink.download = 'offline_hub.html';
+            downloadLink.click();
         }
     </script>
 </body>
