@@ -18,7 +18,7 @@
         .btn {
             display: inline-block;
             padding: 10px 20px;
-            margin: 10px 5px 10px 0;
+            margin: 5px 5px 5px 0;
             background: #161b22;
             color: #c9d1d9;
             text-decoration: none;
@@ -49,6 +49,24 @@
         .return-btn { background: #000000; color: #000000; border: 1px solid #000000; cursor: default; }
         .return-btn:hover { background: #161b22; color: #c9d1d9; border-color: #30363d; }
 
+        /* Embedded Player Frame */
+        #gameViewerContainer {
+            display: none;
+            margin: 20px 0;
+            background: #0d1117;
+            border: 1px solid #30363d;
+            border-radius: 8px;
+            padding: 15px;
+        }
+        #gameFrame {
+            width: 100%;
+            height: 600px;
+            border: none;
+            border-radius: 4px;
+            background: #000;
+        }
+
+        /* Messaging Terminal Window */
         .messaging-card {
             display: none;
             background: #0d1117;
@@ -56,7 +74,28 @@
             border-radius: 6px;
             padding: 20px;
             margin-top: 15px;
-            max-width: 600px;
+            max-width: 650px;
+        }
+
+        .chat-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+        }
+        .tab-btn {
+            padding: 6px 12px;
+            background: #161b22;
+            border: 1px solid #30363d;
+            color: #8b949e;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: 12px;
+        }
+        .tab-btn.active {
+            border-color: #a371f7;
+            color: #a371f7;
+            font-weight: bold;
         }
 
         .auth-group { display: flex; gap: 10px; margin-bottom: 15px; }
@@ -76,7 +115,7 @@
             background: #010409;
             border: 1px solid #21262d;
             border-radius: 4px;
-            height: 150px;
+            height: 180px;
             overflow-y: auto;
             padding: 10px;
             margin-bottom: 10px;
@@ -84,6 +123,7 @@
         }
         .chat-msg { margin-bottom: 6px; }
         .chat-user { color: #a371f7; font-weight: bold; }
+        .chat-dm { color: #d29922; font-weight: bold; }
         .chat-text { color: #c9d1d9; }
         
         hr { border: 0; border-top: 1px solid #30363d; margin: 25px 0; }
@@ -93,90 +133,91 @@
     </style>
 </head>
 <body>
-    <h1>> SYSTEM_DIAGNOSTIC_v1.2.1</h1>
+    <h1>> SYSTEM_DIAGNOSTIC_v1.4.0</h1>
     <div class="status">Status: ENCRYPTED_CONNECTION_ACTIVE // BUILD_STABLE</div>
     
     <div class="log-entry">> Initializing local environment...</div>
-    <div class="log-entry">> Bypassing standard gateway...</div>
-    <div class="log-entry">> Establishing passthrough engine...</div>
-    <div class="log-entry">> Dynamic access code sequence active.</div>
+    <div class="log-entry">> In-tab view rendering engine: ONLINE.</div>
+    <div class="log-entry">> Local message filter and routing active.</div>
 
     <hr>
+
+    <!-- Embedded In-Tab Viewer -->
+    <div id="gameViewerContainer">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+            <span id="activeModuleTitle" style="color: #7ee787; font-weight: bold;">> ACTIVE_MODULE</span>
+            <button class="btn btn-portal" style="padding: 4px 10px; margin: 0; font-size: 12px;" onclick="closeViewer()">[X] Close Module</button>
+        </div>
+        <iframe id="gameFrame" src=""></iframe>
+    </div>
     
-    <p>// PRIORITY MODULES //</p>
+    <p>// PRIORITY MODULES (IN-TAB LAUNCH) //</p>
     <ul>
-        <li><a href="https://pixel-play-app.base44.app" class="btn btn-custom" target="_blank">Launch Priority (Pixel Play / Base44)</a></li>
-        <li><a href="https://sites.google.com/view/drive-u-7-home/home" class="btn btn-portal" target="_blank">Launch Drive U 7 Portal Main</a></li>
+        <li><button class="btn btn-custom" onclick="launchInTab('https://pixel-play-app.base44.app', 'Pixel Play Hub')">Launch Priority (Pixel Play / Base44)</button></li>
+        <li><button class="btn btn-portal" onclick="launchInTab('https://sites.google.com/view/drive-u-7-home/home', 'Drive U 7 Main Portal')">Launch Drive U 7 Portal Main</button></li>
     </ul>
 
     <hr>
 
-    <p>// BROWSER GAME MODULES (DRIVE U 7 ARRAY) //</p>
-    <div class="log-entry" style="color: #d29922; margin-bottom: 10px;">> USER_ACTION_REQUIRED: Update placeholder links below with exact URLs from the Google Site.</div>
+    <p>// BROWSER GAME MODULES (IN-TAB LAUNCH) //</p>
     <ul>
-        <!-- 
-        BUG FIX: I was guessing the URLs in the last build. You need to replace the 'REPLACE_WITH_EXACT_URL' 
-        strings below with the actual links from the Google Site for each game so it doesn't break! 
-        -->
-        <li><a href="REPLACE_WITH_EXACT_URL_FOR_GRANNY" class="btn btn-portal" target="_blank">Module_01 (Granny)</a></li>
-        <li><a href="REPLACE_WITH_EXACT_URL_FOR_COOKIE_CLICKER" class="btn btn-portal" target="_blank">Module_02 (Cookie Clicker)</a></li>
-        <li><a href="REPLACE_WITH_EXACT_URL_FOR_MOTO_X3M" class="btn btn-portal" target="_blank">Module_03 (Moto X3M)</a></li>
-        <li><a href="REPLACE_WITH_EXACT_URL_FOR_SNOW_RIDER" class="btn btn-portal" target="_blank">Module_04 (Snow Rider 3D)</a></li>
-        <li><a href="REPLACE_WITH_EXACT_URL_FOR_RUN_3" class="btn btn-portal" target="_blank">Module_05 (Run 3 Protocol)</a></li>
-        <li><a href="REPLACE_WITH_EXACT_URL_FOR_SLOPE" class="btn btn-portal" target="_blank">Module_06 (Slope)</a></li>
-        <li><a href="REPLACE_WITH_EXACT_URL_FOR_1V1_LOL" class="btn btn-portal" target="_blank">Module_07 (1v1.LOL)</a></li>
-        <li><a href="REPLACE_WITH_EXACT_URL_FOR_RETRO_BOWL" class="btn btn-portal" target="_blank">Module_08 (Retro Bowl)</a></li>
-        <li><a href="REPLACE_WITH_EXACT_URL_FOR_PAPER_IO" class="btn btn-portal" target="_blank">Module_09 (Paper.io 2)</a></li>
-        <li><a href="REPLACE_WITH_EXACT_URL_FOR_TETRIS" class="btn btn-portal" target="_blank">Module_10 (3D Tetris)</a></li>
-    </ul>
-
-    <hr>
-
-    <p>// EXTERNAL STANDALONE MODULES //</p>
-    <ul>
-        <li><a href="https://now.gg/apps/roblox-corporation/5349/roblox.html" class="btn" target="_blank">Launch Module_01 (Roblox / JJS Protocol)</a></li>
-        <li><a href="https://slope3unblocked.github.io/" class="btn" target="_blank">Launch Module_02 (Physics Engine)</a></li>
-        <li><a href="https://play2048.co/" class="btn" target="_blank">Launch Module_03 (Logic Sequence)</a></li>
-        <li><a href="https://1v1.lol/" class="btn" target="_blank">Launch Module_04 (Tactical Sim)</a></li>
-        <li><a href="https://krunker.io/" class="btn" target="_blank">Launch Module_05 (Tactical FPS Protocol)</a></li>
+        <li><button class="btn btn-portal" onclick="launchInTab('https://sites.google.com/view/drive-u-7-home/home', 'Granny Module')">Module_01 (Granny)</button></li>
+        <li><button class="btn btn-portal" onclick="launchInTab('https://sites.google.com/view/drive-u-7-home/cookie-clicker', 'Cookie Clicker')">Module_02 (Cookie Clicker)</button></li>
+        <li><button class="btn btn-portal" onclick="launchInTab('https://sites.google.com/view/drive-u-7-home/moto-x3m-3', 'Moto X3M')">Module_03 (Moto X3M)</button></li>
+        <li><button class="btn btn-portal" onclick="launchInTab('https://sites.google.com/view/drive-u-7-home/snow-rider-3d', 'Snow Rider 3D')">Module_04 (Snow Rider 3D)</button></li>
+        <li><button class="btn btn-portal" onclick="launchInTab('https://sites.google.com/view/drive-u-7-home/run-3', 'Run 3')">Module_05 (Run 3 Protocol)</button></li>
+        <li><button class="btn" onclick="launchInTab('https://slope3unblocked.github.io/', 'Slope Engine')">Module_06 (Slope)</button></li>
+        <li><button class="btn" onclick="launchInTab('https://1v1.lol/', '1v1 Tactical')">Module_07 (1v1.LOL)</button></li>
+        <li><button class="btn" onclick="launchInTab('https://retrobowl.me/', 'Retro Bowl Strategy')">Module_08 (Retro Bowl)</button></li>
+        <li><button class="btn" onclick="launchInTab('https://paperio.gg/', 'Paper.io 2 Matrix')">Module_09 (Paper.io 2)</button></li>
+        <li><button class="btn" onclick="launchInTab('https://play2048.co/', '2048 Logic Sequence')">Module_10 (2048 Logic)</button></li>
     </ul>
 
     <hr>
 
     <p>// CLOUD STREAMING & PLATFORMS //</p>
     <ul>
-        <li><a href="https://www.xbox.com/en-US/play/gallery/fortnite" class="btn btn-stream" target="_blank">Stream Fortnite (xCloud Direct)</a></li>
-        <li><a href="https://www.xbox.com/en-US/play/gallery/forza-horizon-5" class="btn btn-stream" target="_blank">Stream Forza Horizon 5 (xCloud Direct)</a></li>
-        <li><a href="https://www.xbox.com/en-US/play/gallery/minecraft" class="btn btn-stream" target="_blank">Stream Minecraft (xCloud Direct)</a></li>
-        <li><a href="https://www.xbox.com/en-US/play" class="btn btn-stream" target="_blank">Launch Xbox Cloud Gaming (xCloud Main)</a></li>
-        <li><a href="https://now.gg" class="btn btn-stream" target="_blank">Launch now.gg Container Hub</a></li>
+        <li><button class="btn btn-stream" onclick="launchInTab('https://www.xbox.com/en-US/play/gallery/fortnite', 'Fortnite Stream')">Stream Fortnite (xCloud Direct)</button></li>
+        <li><button class="btn btn-stream" onclick="launchInTab('https://www.xbox.com/en-US/play', 'xCloud Platform')">Launch Xbox Cloud Gaming</button></li>
+        <li><button class="btn btn-stream" onclick="launchInTab('https://now.gg', 'now.gg Hub')">Launch now.gg Container Hub</button></li>
     </ul>
 
     <hr>
     
     <div class="log-entry">> System navigation options:</div>
-    <button class="btn btn-comm" onclick="toggleMessaging()">Initialize Encrypted Comms</button>
+    <button class="btn btn-comm" onclick="toggleMessaging()">Initialize Encrypted Comms Terminal</button>
     <button class="btn btn-dl" onclick="downloadPage()">Download Offline Hub</button>
     <a href="index.html" class="btn return-btn">Return to Primary Hub</a>
 
     <!-- Encrypted Messaging Window -->
     <div id="messagingPanel" class="messaging-card">
-        <p style="margin-top: 0; color: #a371f7; font-weight: bold;">// SECURE_COMMUNICATIONS_NODE v1.2.1 //</p>
+        <p style="margin-top: 0; color: #a371f7; font-weight: bold;">// SECURE_COMMUNICATIONS_NODE v1.4.0 //</p>
         
         <!-- Local Account Auth Section -->
         <div id="authContainer" class="auth-group">
             <input type="text" id="usernameInput" class="term-input" placeholder="Handle / Alias">
-            <input type="password" id="passwordInput" class="term-input" placeholder="Access Code (e.g. 6767, 4444)">
+            <input type="password" id="passwordInput" class="term-input" placeholder="Access Code (e.g. 6767)">
             <button class="btn btn-comm" style="padding: 8px 15px; margin: 0;" onclick="loginUser()">Authenticate</button>
         </div>
 
         <div id="userStatus" class="log-entry" style="color: #7ee787; display: none; margin-bottom: 10px;">
-            > Session Active: <span id="activeUserDisplay"></span> (Zero-Knowledge Session)
+            > Session Active: <span id="activeUserDisplay"></span>
+        </div>
+
+        <!-- Mode Toggle Tabs -->
+        <div class="chat-tabs">
+            <button class="tab-btn active" id="tabPublic" onclick="setChatMode('PUBLIC')">PM (Public Message)</button>
+            <button class="tab-btn" id="tabDM" onclick="setChatMode('DM')">DM (Direct Message)</button>
+        </div>
+
+        <!-- Recipient input for DMs -->
+        <div id="dmTargetContainer" style="display: none; margin-bottom: 10px;">
+            <input type="text" id="dmTargetInput" class="term-input" style="width: 100%; box-sizing: border-box;" placeholder="Enter Recipient Handle for DM...">
         </div>
 
         <!-- Chat Feed -->
         <div id="chatFeed" class="chat-box">
-            <div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">v1.2.1 active. Enter any Handle and Access Code to activate.</span></div>
+            <div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">v1.4.0 active. Moderation filter online.</span></div>
         </div>
 
         <!-- Message Input -->
@@ -188,10 +229,48 @@
 
     <script>
         let currentUser = null;
+        let chatMode = 'PUBLIC'; // 'PUBLIC' or 'DM'
+
+        // Basic censorship list for auto-moderation
+        const badWords = ["badword1", "badword2", "fuck", "shit", "bitch", "ass"];
+
+        function filterText(text) {
+            let filtered = text;
+            badWords.forEach(word => {
+                const regex = new RegExp(word, "gi");
+                filtered = filtered.replace(regex, "****");
+            });
+            return filtered;
+        }
+
+        function launchInTab(url, title) {
+            const container = document.getElementById('gameViewerContainer');
+            const iframe = document.getElementById('gameFrame');
+            const titleDisplay = document.getElementById('activeModuleTitle');
+
+            titleDisplay.innerText = `> ACTIVE_MODULE: ${title.toUpperCase()}`;
+            iframe.src = url;
+            container.style.display = 'block';
+            container.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        function closeViewer() {
+            const container = document.getElementById('gameViewerContainer');
+            const iframe = document.getElementById('gameFrame');
+            iframe.src = '';
+            container.style.display = 'none';
+        }
 
         function toggleMessaging() {
             const panel = document.getElementById('messagingPanel');
             panel.style.display = (panel.style.display === 'none' || panel.style.display === '') ? 'block' : 'none';
+        }
+
+        function setChatMode(mode) {
+            chatMode = mode;
+            document.getElementById('tabPublic').classList.toggle('active', mode === 'PUBLIC');
+            document.getElementById('tabDM').classList.toggle('active', mode === 'DM');
+            document.getElementById('dmTargetContainer').style.display = (mode === 'DM') ? 'block' : 'none';
         }
 
         function loginUser() {
@@ -217,12 +296,21 @@
 
         function sendMessage() {
             const msgField = document.getElementById('msgInput');
-            const msg = msgField.value.trim();
+            const rawMsg = msgField.value.trim();
 
-            if (!msg || !currentUser) return;
+            if (!rawMsg || !currentUser) return;
 
+            // Apply censor filter
+            const cleanMsg = filterText(rawMsg);
             const feed = document.getElementById('chatFeed');
-            feed.innerHTML += `<div class="chat-msg"><span class="chat-user">[${currentUser}]:</span> <span class="chat-text">${msg}</span></div>`;
+
+            if (chatMode === 'PUBLIC') {
+                feed.innerHTML += `<div class="chat-msg"><span class="chat-user">[PM] ${currentUser}:</span> <span class="chat-text">${cleanMsg}</span></div>`;
+            } else {
+                const target = document.getElementById('dmTargetInput').value.trim() || 'Unknown';
+                feed.innerHTML += `<div class="chat-msg"><span class="chat-dm">[DM to ${target}] ${currentUser}:</span> <span class="chat-text">${cleanMsg}</span></div>`;
+            }
+
             feed.scrollTop = feed.scrollHeight;
             msgField.value = '';
         }
@@ -233,7 +321,7 @@
             const downloadLink = document.createElement('a');
             
             downloadLink.href = URL.createObjectURL(blob);
-            downloadLink.download = 'offline_hub.html';
+            downloadLink.download = 'offline_hub_v1.4.0.html';
             downloadLink.click();
         }
     </script>
