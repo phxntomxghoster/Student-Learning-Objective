@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Diagnostic v1.5.0 (50th Edition)</title>
+    <title>System Diagnostic v1.5.1 (50th Edition)</title>
     <style>
         :root {
             --bg-color: #000000;
@@ -176,8 +176,8 @@
 
     <div class="header-bar">
         <div>
-            <h1>> SYSTEM_DIAGNOSTIC_v1.5.0 [50th ANNIVERSARY]</h1>
-            <div class="status">Status: ENCRYPTED // MATRIX_ENGINE: ACTIVE</div>
+            <h1>> SYSTEM_DIAGNOSTIC_v1.5.1 [50th ANNIVERSARY persistent]</h1>
+            <div class="status">Status: ENCRYPTED // MATRIX_ENGINE & DB: ACTIVE</div>
         </div>
         <div style="text-align: right; font-size: 12px; color: #8b949e;">
             <div id="sysClock">TIME: --:--:--</div>
@@ -244,12 +244,18 @@
 
     <!-- Encrypted Messaging Window -->
     <div id="messagingPanel" class="messaging-card">
-        <p style="margin-top: 0; color: #a371f7; font-weight: bold;">// SECURE_COMMUNICATIONS_NODE v1.5.0 //</p>
+        <p style="margin-top: 0; color: #a371f7; font-weight: bold;">// SECURE_COMMUNICATIONS_NODE v1.5.1 //</p>
         
-        <div id="authContainer" class="auth-group">
-            <input type="text" id="usernameInput" class="term-input" placeholder="Handle / Alias">
-            <input type="password" id="passwordInput" class="term-input" placeholder="Access Code (e.g. 6767)">
-            <button class="btn btn-comm" style="padding: 8px 15px; margin: 0;" onclick="loginUser()">Authenticate</button>
+        <!-- Local Account Auth Section (Login & Register) -->
+        <div id="authContainer" class="auth-group" style="flex-direction: column; gap: 8px;">
+            <div style="display: flex; gap: 8px;">
+                <input type="text" id="usernameInput" class="term-input" style="flex: 1;" placeholder="Handle / Username">
+                <input type="password" id="passwordInput" class="term-input" style="flex: 1;" placeholder="Access Passcode">
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <button class="btn btn-comm" style="flex: 1; padding: 8px; margin: 0;" onclick="loginUser()">Login</button>
+                <button class="btn btn-custom" style="flex: 1; padding: 8px; margin: 0;" onclick="registerUser()">Register Account</button>
+            </div>
         </div>
 
         <div id="userStatus" class="log-entry" style="color: #7ee787; display: none; margin-bottom: 10px;">
@@ -266,7 +272,7 @@
         </div>
 
         <div id="chatFeed" class="chat-box">
-            <div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">v1.5.0 active. Moderation filter online.</span></div>
+            <div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">v1.5.1 active. Moderation filter & local persistence online.</span></div>
         </div>
 
         <div class="auth-group" style="margin-bottom: 0;">
@@ -277,7 +283,7 @@
 
     <!-- Admin Control Terminal -->
     <div id="adminPanel" class="messaging-card" style="border-color: #da3633;">
-        <p style="margin-top: 0; color: #f78166; font-weight: bold;">// ADMIN_COMMAND_OVERRIDE_TERMINAL v1.5.0 //</p>
+        <p style="margin-top: 0; color: #f78166; font-weight: bold;">// ADMIN_COMMAND_OVERRIDE_TERMINAL v1.5.1 //</p>
         
         <div id="adminControls">
             <div class="log-entry" style="color: #7ee787; margin-bottom: 15px;">
@@ -308,12 +314,40 @@
     </div>
 
     <script>
-        // Accounts Database
-        const userDatabase = {
-            "phxntom": { pass: "6767", role: "admin" },
-            "guest1":  { pass: "1234", role: "user"  },
-            "student": { pass: "0000", role: "user"  }
-        };
+        // Persistent Account Management Engine (localStorage)
+        function getStoredAccounts() {
+            const saved = localStorage.getItem('hub_user_db');
+            if (saved) {
+                return JSON.parse(saved);
+            } else {
+                const initialDB = {
+                    "phxntom": { pass: "6767", role: "admin", saves: {} },
+                    "guest1":  { pass: "1234", role: "user", saves: {} }
+                };
+                localStorage.setItem('hub_user_db', JSON.stringify(initialDB));
+                return initialDB;
+            }
+        }
+
+        function saveAccountsDB(db) {
+            localStorage.setItem('hub_user_db', JSON.stringify(db));
+        }
+
+        function loadChatHistory() {
+            const savedHistory = localStorage.getItem('hub_chat_history');
+            if (savedHistory) {
+                const feed = document.getElementById('chatFeed');
+                feed.innerHTML = savedHistory;
+                feed.scrollTop = feed.scrollHeight;
+            }
+        }
+
+        function persistChatMessage(htmlString) {
+            const feed = document.getElementById('chatFeed');
+            feed.innerHTML += htmlString;
+            feed.scrollTop = feed.scrollHeight;
+            localStorage.setItem('hub_chat_history', feed.innerHTML);
+        }
 
         let currentUser = null;
         let currentRole = "user";
@@ -420,13 +454,37 @@
             document.getElementById('dmTargetContainer').style.display = (mode === 'DM') ? 'block' : 'none';
         }
 
+        function registerUser() {
+            const user = document.getElementById('usernameInput').value.trim();
+            const pass = document.getElementById('passwordInput').value.trim();
+
+            if (!user || !pass) {
+                alert('ERROR: Enter both username and passcode to register.');
+                return;
+            }
+
+            const db = getStoredAccounts();
+
+            if (db[user]) {
+                alert('ERROR: Username already taken! Choose another handle.');
+                return;
+            }
+
+            db[user] = { pass: pass, role: "user", saves: {} };
+            saveAccountsDB(db);
+
+            alert(`ACCOUNT CREATED! Welcome, ${user}. You can now log in.`);
+        }
+
         function loginUser() {
             const user = document.getElementById('usernameInput').value.trim();
             const pass = document.getElementById('passwordInput').value.trim();
 
-            if (userDatabase[user] && userDatabase[user].pass === pass) {
+            const db = getStoredAccounts();
+
+            if (db[user] && db[user].pass === pass) {
                 currentUser = user;
-                currentRole = userDatabase[user].role;
+                currentRole = db[user].role;
 
                 document.getElementById('authContainer').style.display = 'none';
                 document.getElementById('activeUserDisplay').innerText = `${currentUser} [${currentRole.toUpperCase()}]`;
@@ -440,9 +498,10 @@
                     document.getElementById('adminUserDisplay').innerText = currentUser;
                 }
 
-                const feed = document.getElementById('chatFeed');
-                feed.innerHTML += `<div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">Welcome, ${currentUser}. Session authorized as ${currentRole.toUpperCase()}.</span></div>`;
-                feed.scrollTop = feed.scrollHeight;
+                loadChatHistory();
+
+                const welcomeMsg = `<div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">Welcome back, ${currentUser}. Session active.</span></div>`;
+                persistChatMessage(welcomeMsg);
             } else {
                 alert('ACCESS DENIED: Invalid Handle or Access Code.');
             }
@@ -454,22 +513,24 @@
             if (!rawMsg || !currentUser) return;
 
             const cleanMsg = filterText(rawMsg);
-            const feed = document.getElementById('chatFeed');
+            let msgHTML = '';
 
             if (chatMode === 'PUBLIC') {
-                feed.innerHTML += `<div class="chat-msg"><span class="chat-user">[PM] ${currentUser}:</span> <span class="chat-text">${cleanMsg}</span></div>`;
+                msgHTML = `<div class="chat-msg"><span class="chat-user">[PM] ${currentUser}:</span> <span class="chat-text">${cleanMsg}</span></div>`;
             } else {
                 const target = document.getElementById('dmTargetInput').value.trim() || 'Unknown';
-                feed.innerHTML += `<div class="chat-msg"><span class="chat-dm">[DM to ${target}] ${currentUser}:</span> <span class="chat-text">${cleanMsg}</span></div>`;
+                msgHTML = `<div class="chat-msg"><span class="chat-dm">[DM to ${target}] ${currentUser}:</span> <span class="chat-text">${cleanMsg}</span></div>`;
             }
 
-            feed.scrollTop = feed.scrollHeight;
+            persistChatMessage(msgHTML);
             msgField.value = '';
         }
 
         function clearChat() {
             if (currentRole !== "admin") return;
-            document.getElementById('chatFeed').innerHTML = `<div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">Logs cleared by Administrator.</span></div>`;
+            const sysMsg = `<div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">Logs cleared by Administrator.</span></div>`;
+            document.getElementById('chatFeed').innerHTML = sysMsg;
+            localStorage.setItem('hub_chat_history', sysMsg);
         }
 
         function sendBroadcast() {
@@ -478,18 +539,20 @@
             const msg = broadcastInput.value.trim();
             if (!msg) return;
 
-            const feed = document.getElementById('chatFeed');
-            feed.innerHTML += `<div class="chat-msg" style="background: rgba(218, 54, 51, 0.2); padding: 6px; border-radius: 4px; border: 1px solid #da3633;"><span class="chat-user" style="color: #f78166;">[ANNOUNCEMENT]:</span> <span class="chat-text" style="color: #ffffff; font-weight: bold;">${msg}</span></div>`;
-            feed.scrollTop = feed.scrollHeight;
+            const announcementHTML = `<div class="chat-msg" style="background: rgba(218, 54, 51, 0.2); padding: 6px; border-radius: 4px; border: 1px solid #da3633;"><span class="chat-user" style="color: #f78166;">[ANNOUNCEMENT]:</span> <span class="chat-text" style="color: #ffffff; font-weight: bold;">${msg}</span></div>`;
+            persistChatMessage(announcementHTML);
             broadcastInput.value = '';
         }
 
         function nuclearReset() {
             if (currentRole !== "admin") return;
-            if (confirm("WARNING: Reset all local states and close active streams?")) {
+            if (confirm("WARNING: Reset all local states, accounts, and chat history?")) {
+                localStorage.removeItem('hub_user_db');
+                localStorage.removeItem('hub_chat_history');
                 closeViewer();
                 clearChat();
-                alert("SYSTEM CLEARED & PURGED.");
+                alert("SYSTEM CLEARED & PURGED. Reloading...");
+                location.reload();
             }
         }
 
@@ -498,7 +561,7 @@
             const blob = new Blob([pageData], { type: 'text/html' });
             const downloadLink = document.createElement('a');
             downloadLink.href = URL.createObjectURL(blob);
-            downloadLink.download = 'offline_hub_v1.5.0.html';
+            downloadLink.download = 'offline_hub_v1.5.1.html';
             downloadLink.click();
         }
     </script>
