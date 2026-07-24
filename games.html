@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Diagnostic v1.5.1 (50th Edition)</title>
+    <title>System Diagnostic v1.5.0 (Anniversary Master Edition)</title>
     <style>
         :root {
             --bg-color: #000000;
@@ -17,8 +17,8 @@
             background-color: var(--bg-color);
             color: var(--accent-color);
             font-family: 'Courier New', Courier, monospace;
-            padding: 30px;
-            line-height: 1.6;
+            padding: 25px;
+            line-height: 1.5;
             margin: 0;
             position: relative;
         }
@@ -41,24 +41,37 @@
             align-items: center;
             border-bottom: 2px solid var(--border-color);
             padding-bottom: 10px;
-            margin-bottom: 20px;
+            margin-bottom: 15px;
         }
 
-        h1 { color: var(--accent-color); font-size: 24px; margin: 0; }
-        .status { color: #7ee787; font-weight: bold; }
-        .log-entry { margin: 5px 0; font-size: 14px; color: #8b949e; }
+        h1 { color: var(--accent-color); font-size: 22px; margin: 0; }
+        .status { color: #7ee787; font-weight: bold; font-size: 13px; }
+        .log-entry { margin: 5px 0; font-size: 13px; color: #8b949e; }
         
+        /* Lockdown Banner */
+        #lockdownBanner {
+            display: none;
+            background: rgba(218, 54, 51, 0.25);
+            border: 1px solid #da3633;
+            color: #f78166;
+            padding: 10px;
+            border-radius: 6px;
+            font-weight: bold;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
         /* Buttons */
         .btn {
             display: inline-block;
-            padding: 8px 16px;
+            padding: 8px 14px;
             margin: 4px 4px 4px 0;
             background: #161b22;
             color: var(--text-color);
             text-decoration: none;
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            font-size: 13px;
+            font-size: 12px;
             transition: 0.2s;
             cursor: pointer;
             font-family: inherit;
@@ -83,7 +96,7 @@
         /* Embedded Player Frame */
         #gameViewerContainer {
             display: none;
-            margin: 20px 0;
+            margin: 15px 0;
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 8px;
@@ -91,46 +104,45 @@
         }
         #gameFrame {
             width: 100%;
-            height: 600px;
+            height: 550px;
             border: none;
             border-radius: 4px;
             background: #000;
         }
 
-        /* Terminals */
+        /* Terminals & Cards */
         .messaging-card {
-            display: none;
             background: var(--card-bg);
             border: 1px solid var(--border-color);
             border-radius: 6px;
-            padding: 20px;
+            padding: 15px;
             margin-top: 15px;
-            max-width: 650px;
+            max-width: 750px;
         }
 
-        .chat-tabs { display: flex; gap: 10px; margin-bottom: 10px; }
+        .chat-tabs { display: flex; gap: 8px; margin-bottom: 10px; flex-wrap: wrap; }
         .tab-btn {
-            padding: 6px 12px;
+            padding: 6px 10px;
             background: #161b22;
             border: 1px solid var(--border-color);
             color: #8b949e;
             border-radius: 4px;
             cursor: pointer;
             font-family: inherit;
-            font-size: 12px;
+            font-size: 11px;
         }
         .tab-btn.active { border-color: #a371f7; color: #a371f7; font-weight: bold; }
 
-        .auth-group { display: flex; gap: 10px; margin-bottom: 15px; }
+        .auth-group { display: flex; gap: 8px; margin-bottom: 10px; }
 
         .term-input {
             background: #161b22;
             border: 1px solid var(--border-color);
             color: #c9d1d9;
-            padding: 8px 12px;
+            padding: 8px 10px;
             border-radius: 4px;
             font-family: inherit;
-            font-size: 13px;
+            font-size: 12px;
         }
         .term-input:focus { outline: none; border-color: var(--accent-color); }
 
@@ -142,16 +154,26 @@
             overflow-y: auto;
             padding: 10px;
             margin-bottom: 10px;
-            font-size: 13px;
+            font-size: 12px;
         }
-        .chat-msg { margin-bottom: 6px; }
+        .chat-msg { margin-bottom: 5px; }
         .chat-user { color: #a371f7; font-weight: bold; }
         .chat-dm { color: #d29922; font-weight: bold; }
+        .chat-room { color: #3fb950; font-weight: bold; }
         .chat-text { color: #c9d1d9; }
+
+        /* Local 2-Player Game Arena */
+        #gameArenaCanvas {
+            background: #000;
+            border: 1px solid var(--border-color);
+            display: block;
+            margin: 10px 0;
+            border-radius: 4px;
+        }
         
-        hr { border: 0; border-top: 1px solid var(--border-color); margin: 25px 0; }
+        hr { border: 0; border-top: 1px solid var(--border-color); margin: 20px 0; }
         ul { list-style-type: none; padding: 0; }
-        li { margin-bottom: 10px; }
+        li { margin-bottom: 8px; }
         li::before { content: "• "; color: var(--accent-color); }
 
         /* Stealth Cover Overlay */
@@ -176,25 +198,54 @@
 
     <div class="header-bar">
         <div>
-            <h1>> SYSTEM_DIAGNOSTIC_v1.5.1 [50th ANNIVERSARY persistent]</h1>
-            <div class="status">Status: ENCRYPTED // MATRIX_ENGINE & DB: ACTIVE</div>
+            <h1>> SYSTEM_DIAGNOSTIC_v1.5.0 [ANNIVERSARY MASTER]</h1>
+            <div class="status">Status: ENCRYPTED // MATRIX & LOCAL_DB: ONLINE</div>
         </div>
-        <div style="text-align: right; font-size: 12px; color: #8b949e;">
+        <div style="text-align: right; font-size: 11px; color: #8b949e;">
             <div id="sysClock">TIME: --:--:--</div>
             <div>CPU: <span id="fakeCpu">12%</span> | RAM: <span id="fakeRam">1.4GB</span></div>
-            <div style="color: #f78166; margin-top: 4px;">Press [ESC] for Panic Mode</div>
+            <div id="breakTimerDisplay" style="color: #7ee787; font-weight: bold;">BREAK TIMER: INACTIVE</div>
+            <div style="color: #f78166; margin-top: 2px;">Press [ESC] for Panic Mode</div>
         </div>
     </div>
 
-    <!-- Theme Switcher -->
-    <div style="margin-bottom: 15px;">
+    <!-- Active Lockdown Alert -->
+    <div id="lockdownBanner">
+        🚨 SYSTEM LOCKDOWN / STUDY MODE IS CURRENTLY ACTIVE BY ADMINISTRATOR 🚨<br>
+        <span style="font-size: 12px; font-weight: normal;">Game modules are restricted until the break timer completes or override is granted.</span>
+    </div>
+
+    <!-- Visual Theme Switcher -->
+    <div style="margin-bottom: 12px;">
         <span class="log-entry">> Visual Matrix Theme: </span>
         <button class="btn" style="padding: 2px 8px; font-size: 11px;" onclick="setTheme('default')">Cyber Blue</button>
         <button class="btn" style="padding: 2px 8px; font-size: 11px; border-color: #2ea043; color: #3fb950;" onclick="setTheme('matrix')">Matrix Green</button>
         <button class="btn" style="padding: 2px 8px; font-size: 11px; border-color: #da3633; color: #f78166;" onclick="setTheme('blood')">Blood Red</button>
     </div>
 
-    <!-- Embedded In-Tab Viewer -->
+    <!-- User Access Portal Card -->
+    <div id="loginCard" class="messaging-card" style="display: block; max-width: 100%; border-color: var(--accent-color);">
+        <p style="margin-top: 0; color: var(--accent-color); font-weight: bold;">// USER_ACCESS_PORTAL v1.5.0 //</p>
+        
+        <div id="authContainer" class="auth-group" style="flex-direction: column; gap: 8px; margin-bottom: 0;">
+            <div style="display: flex; gap: 8px;">
+                <input type="text" id="usernameInput" class="term-input" style="flex: 1;" placeholder="Handle / Username">
+                <input type="password" id="passwordInput" class="term-input" style="flex: 1;" placeholder="Access Passcode">
+            </div>
+            <div style="display: flex; gap: 8px;">
+                <button class="btn btn-comm" style="flex: 1; padding: 8px; margin: 0;" onclick="loginUser()">Login to Session</button>
+                <button class="btn btn-custom" style="flex: 1; padding: 8px; margin: 0;" onclick="registerUser()">Register Account</button>
+            </div>
+        </div>
+
+        <div id="userStatus" class="log-entry" style="color: #7ee787; display: none; margin-top: 5px;">
+            > ACTIVE_SESSION: <span id="activeUserDisplay" style="font-weight: bold;"></span>
+        </div>
+    </div>
+
+    <hr>
+
+    <!-- Embedded In-Tab Player Frame -->
     <div id="gameViewerContainer">
         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
             <span id="activeModuleTitle" style="color: #7ee787; font-weight: bold;">> ACTIVE_MODULE</span>
@@ -236,65 +287,88 @@
 
     <hr>
     
-    <!-- System Navigation Options -->
-    <div class="log-entry">> System navigation options:</div>
-    <button class="btn btn-comm" onclick="toggleMessaging()">Initialize Encrypted Comms Terminal</button>
-    <button id="adminAccessBtn" class="btn btn-portal" style="display: none;" onclick="toggleAdminPanel()">Initialize Admin Control Terminal</button>
+    <!-- System Navigation Terminals -->
+    <div class="log-entry">> System Navigation Terminals:</div>
+    <button class="btn btn-comm" onclick="toggleCard('messagingPanel')">Encrypted Comms & Group Rooms</button>
+    <button class="btn btn-custom" onclick="toggleCard('localGameCard')">Offline 2-Player Combat Arena</button>
+    <button id="adminAccessBtn" class="btn btn-portal" style="display: none;" onclick="toggleCard('adminPanel')">Admin Command Center</button>
     <button class="btn btn-dl" onclick="downloadPage()">Download Offline Hub</button>
 
-    <!-- Encrypted Messaging Window -->
-    <div id="messagingPanel" class="messaging-card">
-        <p style="margin-top: 0; color: #a371f7; font-weight: bold;">// SECURE_COMMUNICATIONS_NODE v1.5.1 //</p>
-        
-        <!-- Local Account Auth Section (Login & Register) -->
-        <div id="authContainer" class="auth-group" style="flex-direction: column; gap: 8px;">
-            <div style="display: flex; gap: 8px;">
-                <input type="text" id="usernameInput" class="term-input" style="flex: 1;" placeholder="Handle / Username">
-                <input type="password" id="passwordInput" class="term-input" style="flex: 1;" placeholder="Access Passcode">
-            </div>
-            <div style="display: flex; gap: 8px;">
-                <button class="btn btn-comm" style="flex: 1; padding: 8px; margin: 0;" onclick="loginUser()">Login</button>
-                <button class="btn btn-custom" style="flex: 1; padding: 8px; margin: 0;" onclick="registerUser()">Register Account</button>
-            </div>
-        </div>
-
-        <div id="userStatus" class="log-entry" style="color: #7ee787; display: none; margin-bottom: 10px;">
-            > Session Active: <span id="activeUserDisplay"></span>
-        </div>
+    <!-- Encrypted Messaging & Group Rooms Terminal -->
+    <div id="messagingPanel" class="messaging-card" style="display: none;">
+        <p style="margin-top: 0; color: #a371f7; font-weight: bold;">// MULTI_USER_SECURE_COMMUNICATIONS v1.5.0 //</p>
 
         <div class="chat-tabs">
-            <button class="tab-btn active" id="tabPublic" onclick="setChatMode('PUBLIC')">PM (Public Message)</button>
+            <button class="tab-btn active" id="tabPublic" onclick="setChatMode('PUBLIC')">PM (Public)</button>
             <button class="tab-btn" id="tabDM" onclick="setChatMode('DM')">DM (Direct Message)</button>
+            <button class="tab-btn" id="tabRoom" onclick="setChatMode('ROOM')">Group Channel</button>
         </div>
 
         <div id="dmTargetContainer" style="display: none; margin-bottom: 10px;">
-            <input type="text" id="dmTargetInput" class="term-input" style="width: 100%; box-sizing: border-box;" placeholder="Enter Recipient Handle for DM...">
+            <input type="text" id="dmTargetInput" class="term-input" style="width: 100%; box-sizing: border-box;" placeholder="Enter Recipient Handle for Direct Message...">
+        </div>
+
+        <div id="roomTargetContainer" style="display: none; margin-bottom: 10px;">
+            <div style="display: flex; gap: 8px;">
+                <input type="text" id="roomKeyInput" class="term-input" style="flex: 1;" placeholder="Enter or Create Group Room Key (e.g. #squad)">
+                <button class="btn btn-comm" style="margin:0;" onclick="switchGroupRoom()">Join Channel</button>
+            </div>
+            <div id="activeRoomLabel" class="log-entry" style="color: #3fb950; margin-top: 4px;">Current Channel: #global</div>
         </div>
 
         <div id="chatFeed" class="chat-box">
-            <div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">v1.5.1 active. Moderation filter & local persistence online.</span></div>
+            <div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">v1.5.0 Multi-User Chat Online. Persistent room db active.</span></div>
         </div>
 
         <div class="auth-group" style="margin-bottom: 0;">
-            <input type="text" id="msgInput" class="term-input" style="flex: 1;" placeholder="Enter encrypted packet..." disabled>
+            <input type="text" id="msgInput" class="term-input" style="flex: 1;" placeholder="Enter encrypted message..." disabled>
             <button id="sendBtn" class="btn" style="padding: 8px 15px; margin: 0;" onclick="sendMessage()" disabled>Send</button>
         </div>
     </div>
 
-    <!-- Admin Control Terminal -->
-    <div id="adminPanel" class="messaging-card" style="border-color: #da3633;">
-        <p style="margin-top: 0; color: #f78166; font-weight: bold;">// ADMIN_COMMAND_OVERRIDE_TERMINAL v1.5.1 //</p>
+    <!-- Offline 2-Player Local Game Terminal -->
+    <div id="localGameCard" class="messaging-card" style="display: none; border-color: #3fb950;">
+        <p style="margin-top: 0; color: #3fb950; font-weight: bold;">// OFFLINE_LOCAL_2P_COMBAT_ARENA //</p>
+        <div class="log-entry">Controls: <span style="color:#58a6ff;">P1: WASD (Move) + Space (Fire)</span> | <span style="color:#f78166;">P2: Arrow Keys (Move) + Enter (Fire)</span></div>
+        
+        <canvas id="gameArenaCanvas" width="650" height="300"></canvas>
+        
+        <div style="display: flex; justify-content: space-between; align-items: center;">
+            <div id="gameScore" style="color: #7ee787; font-weight: bold;">P1: 0 | P2: 0</div>
+            <button class="btn btn-stream" onclick="reset2PGame()">Restart Battle</button>
+        </div>
+    </div>
+
+    <!-- Admin Command Terminal -->
+    <div id="adminPanel" class="messaging-card" style="display: none; border-color: #da3633;">
+        <p style="margin-top: 0; color: #f78166; font-weight: bold;">// ADMIN_COMMAND_OVERRIDE_TERMINAL v1.5.0 //</p>
         
         <div id="adminControls">
-            <div class="log-entry" style="color: #7ee787; margin-bottom: 15px;">
+            <div class="log-entry" style="color: #7ee787; margin-bottom: 12px;">
                 > ROOT_PRIVILEGES_GRANTED // Active Admin: <span id="adminUserDisplay"></span>
             </div>
 
-            <p style="color: #c9d1d9; font-size: 13px;">Execute Admin Commands:</p>
-            
-            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px;">
-                <button class="btn btn-portal" onclick="clearChat()">Clear Chat Logs</button>
-                <button class="btn btn-portal" onclick="nuclearReset()">Nuclear State Reset</button>
+            <p style="color: #c9d1d9; font-size: 12px; margin-bottom: 5px;">Break Time & System Lockdown Controls:</p>
+            <div class="auth-group">
+                <input type="number" id="breakMinutesInput" class="term-input" style="width: 120px;" placeholder="Minutes (e.g. 15)">
+                <button class="btn btn-stream" style="margin: 0;" onclick="startBreakTimer()">Start Break Clock</button>
+                <button class="btn btn-portal" style="margin: 0;" onclick="toggleLockdown()">Toggle Lockdown Mode</button>
+            </div>
+
+            <hr style="margin: 12px 0;">
+
+            <p style="color: #c9d1d9; font-size: 12px; margin-bottom: 5px;">Diagnostic Update Terminal (Upload / Hot-Swap Code):</p>
+            <div class="auth-group">
+                <input type="file" id="firmwareFileInput" class="term-input" accept=".html,.json,.js" style="flex: 1;">
+                <button class="btn btn-custom" style="margin: 0;" onclick="applyFirmwareUpdate()">Upload & Flash Update</button>
+            </div>
+
+            <hr style="margin: 12px 0;">
+
+            <p style="color: #c9d1d9; font-size: 12px; margin-bottom: 5px;">Database & Global Override:</p>
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 10px;">
+                <button class="btn btn-portal" onclick="clearChat()">Clear Active Chat Logs</button>
+                <button class="btn btn-portal" onclick="nuclearReset()">Nuclear State Purge</button>
             </div>
 
             <div class="auth-group" style="margin-bottom: 0;">
@@ -314,15 +388,23 @@
     </div>
 
     <script>
-        // Persistent Account Management Engine (localStorage)
+        // Persistent State
+        let currentUser = null;
+        let currentRole = "user";
+        let chatMode = 'PUBLIC';
+        let currentRoomKey = "#global";
+        let lockdownActive = false;
+        let breakSecondsRemaining = 0;
+        let breakTimerInterval = null;
+
         function getStoredAccounts() {
             const saved = localStorage.getItem('hub_user_db');
             if (saved) {
                 return JSON.parse(saved);
             } else {
                 const initialDB = {
-                    "phxntom": { pass: "6767", role: "admin", saves: {} },
-                    "guest1":  { pass: "1234", role: "user", saves: {} }
+                    "phxntom": { pass: "6767", role: "admin" },
+                    "guest1":  { pass: "1234", role: "user" }
                 };
                 localStorage.setItem('hub_user_db', JSON.stringify(initialDB));
                 return initialDB;
@@ -334,24 +416,24 @@
         }
 
         function loadChatHistory() {
-            const savedHistory = localStorage.getItem('hub_chat_history');
+            const storageKey = chatMode === 'ROOM' ? `hub_chat_room_${currentRoomKey}` : 'hub_chat_history';
+            const savedHistory = localStorage.getItem(storageKey);
+            const feed = document.getElementById('chatFeed');
             if (savedHistory) {
-                const feed = document.getElementById('chatFeed');
                 feed.innerHTML = savedHistory;
-                feed.scrollTop = feed.scrollHeight;
+            } else {
+                feed.innerHTML = `<div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">Channel active. Channel key: ${chatMode === 'ROOM' ? currentRoomKey : 'MAIN'}</span></div>`;
             }
+            feed.scrollTop = feed.scrollHeight;
         }
 
         function persistChatMessage(htmlString) {
             const feed = document.getElementById('chatFeed');
             feed.innerHTML += htmlString;
             feed.scrollTop = feed.scrollHeight;
-            localStorage.setItem('hub_chat_history', feed.innerHTML);
+            const storageKey = chatMode === 'ROOM' ? `hub_chat_room_${currentRoomKey}` : 'hub_chat_history';
+            localStorage.setItem(storageKey, feed.innerHTML);
         }
-
-        let currentUser = null;
-        let currentRole = "user";
-        let chatMode = 'PUBLIC';
 
         const badWords = ["ass", "bastard", "bitch", "cock", "crap", "cunt", "dick", "fuck", "hoe", "nigga", "nigger", "piss", "pussy", "shit", "shitstain", "slut", "wench"];
 
@@ -365,7 +447,7 @@
             return filtered;
         }
 
-        // Clock & Fake Performance Telemetry
+        // Clock & Telemetry
         setInterval(() => {
             const now = new Date();
             document.getElementById('sysClock').innerText = `TIME: ${now.toLocaleTimeString()}`;
@@ -373,7 +455,7 @@
             document.getElementById('fakeRam').innerText = `${(Math.random() * 0.4 + 1.2).toFixed(1)}GB`;
         }, 1000);
 
-        // Matrix Background Rain Engine
+        // Matrix Background
         const canvas = document.getElementById('matrixCanvas');
         const ctx = canvas.getContext('2d');
         canvas.width = window.innerWidth;
@@ -396,7 +478,7 @@
         }
         setInterval(drawMatrix, 50);
 
-        // Panic Key Listener
+        // Panic Mode
         window.addEventListener('keydown', (e) => {
             if (e.key === 'Escape') {
                 const overlay = document.getElementById('panicOverlay');
@@ -422,7 +504,16 @@
             }
         }
 
+        function toggleCard(cardId) {
+            const card = document.getElementById(cardId);
+            card.style.display = (card.style.display === 'none' || card.style.display === '') ? 'block' : 'none';
+        }
+
         function launchInTab(url, title) {
+            if (lockdownActive) {
+                alert("ACCESS DENIED: Lockdown Mode is active. Game modules are disabled by Administrator.");
+                return;
+            }
             const container = document.getElementById('gameViewerContainer');
             const iframe = document.getElementById('gameFrame');
             document.getElementById('activeModuleTitle').innerText = `> ACTIVE_MODULE: ${title.toUpperCase()}`;
@@ -436,50 +527,30 @@
             document.getElementById('gameViewerContainer').style.display = 'none';
         }
 
-        function toggleMessaging() {
-            const panel = document.getElementById('messagingPanel');
-            panel.style.display = (panel.style.display === 'none' || panel.style.display === '') ? 'block' : 'none';
-        }
-
-        function toggleAdminPanel() {
-            if (currentRole !== "admin") return;
-            const panel = document.getElementById('adminPanel');
-            panel.style.display = (panel.style.display === 'none' || panel.style.display === '') ? 'block' : 'none';
-        }
-
-        function setChatMode(mode) {
-            chatMode = mode;
-            document.getElementById('tabPublic').classList.toggle('active', mode === 'PUBLIC');
-            document.getElementById('tabDM').classList.toggle('active', mode === 'DM');
-            document.getElementById('dmTargetContainer').style.display = (mode === 'DM') ? 'block' : 'none';
-        }
-
+        // Auth
         function registerUser() {
             const user = document.getElementById('usernameInput').value.trim();
             const pass = document.getElementById('passwordInput').value.trim();
 
             if (!user || !pass) {
-                alert('ERROR: Enter both username and passcode to register.');
+                alert('ERROR: Provide both username and passcode to register.');
                 return;
             }
 
             const db = getStoredAccounts();
-
             if (db[user]) {
-                alert('ERROR: Username already taken! Choose another handle.');
+                alert('ERROR: Username handle already registered.');
                 return;
             }
 
-            db[user] = { pass: pass, role: "user", saves: {} };
+            db[user] = { pass: pass, role: "user" };
             saveAccountsDB(db);
-
-            alert(`ACCOUNT CREATED! Welcome, ${user}. You can now log in.`);
+            alert(`REGISTERED: Welcome, ${user}! You can now login.`);
         }
 
         function loginUser() {
             const user = document.getElementById('usernameInput').value.trim();
             const pass = document.getElementById('passwordInput').value.trim();
-
             const db = getStoredAccounts();
 
             if (db[user] && db[user].pass === pass) {
@@ -499,12 +570,31 @@
                 }
 
                 loadChatHistory();
-
-                const welcomeMsg = `<div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">Welcome back, ${currentUser}. Session active.</span></div>`;
-                persistChatMessage(welcomeMsg);
+                alert(`AUTHENTICATED: Session initialized as ${currentUser}.`);
             } else {
-                alert('ACCESS DENIED: Invalid Handle or Access Code.');
+                alert('ACCESS DENIED: Incorrect Handle or Passcode.');
             }
+        }
+
+        // Group Chat & Modes
+        function setChatMode(mode) {
+            chatMode = mode;
+            document.getElementById('tabPublic').classList.toggle('active', mode === 'PUBLIC');
+            document.getElementById('tabDM').classList.toggle('active', mode === 'DM');
+            document.getElementById('tabRoom').classList.toggle('active', mode === 'ROOM');
+
+            document.getElementById('dmTargetContainer').style.display = (mode === 'DM') ? 'block' : 'none';
+            document.getElementById('roomTargetContainer').style.display = (mode === 'ROOM') ? 'block' : 'none';
+
+            loadChatHistory();
+        }
+
+        function switchGroupRoom() {
+            const key = document.getElementById('roomKeyInput').value.trim();
+            if (!key) return;
+            currentRoomKey = key.startsWith('#') ? key : `#${key}`;
+            document.getElementById('activeRoomLabel').innerText = `Current Channel: ${currentRoomKey}`;
+            loadChatHistory();
         }
 
         function sendMessage() {
@@ -517,41 +607,91 @@
 
             if (chatMode === 'PUBLIC') {
                 msgHTML = `<div class="chat-msg"><span class="chat-user">[PM] ${currentUser}:</span> <span class="chat-text">${cleanMsg}</span></div>`;
-            } else {
+            } else if (chatMode === 'DM') {
                 const target = document.getElementById('dmTargetInput').value.trim() || 'Unknown';
                 msgHTML = `<div class="chat-msg"><span class="chat-dm">[DM to ${target}] ${currentUser}:</span> <span class="chat-text">${cleanMsg}</span></div>`;
+            } else {
+                msgHTML = `<div class="chat-msg"><span class="chat-room">[${currentRoomKey}] ${currentUser}:</span> <span class="chat-text">${cleanMsg}</span></div>`;
             }
 
             persistChatMessage(msgHTML);
             msgField.value = '';
         }
 
+        // Admin Features (Break Time & Lockdown)
+        function startBreakTimer() {
+            if (currentRole !== "admin") return;
+            const mins = parseInt(document.getElementById('breakMinutesInput').value) || 15;
+            breakSecondsRemaining = mins * 60;
+
+            if (breakTimerInterval) clearInterval(breakTimerInterval);
+
+            breakTimerInterval = setInterval(() => {
+                if (breakSecondsRemaining <= 0) {
+                    clearInterval(breakTimerInterval);
+                    document.getElementById('breakTimerDisplay').innerText = "BREAK TIMER: FINISHED";
+                    return;
+                }
+                breakSecondsRemaining--;
+                const m = Math.floor(breakSecondsRemaining / 60);
+                const s = breakSecondsRemaining % 60;
+                document.getElementById('breakTimerDisplay').innerText = `BREAK TIMER: ${m}:${s < 10 ? '0' : ''}${s}`;
+            }, 1000);
+
+            alert(`BREAK TIMER STARTED: ${mins} minutes countdown active!`);
+        }
+
+        function toggleLockdown() {
+            if (currentRole !== "admin") return;
+            lockdownActive = !lockdownActive;
+            document.getElementById('lockdownBanner').style.display = lockdownActive ? 'block' : 'none';
+            alert(`SYSTEM LOCKDOWN: ${lockdownActive ? 'ENABLED' : 'DISABLED'}`);
+        }
+
+        // Diagnostic Firmware Update Terminal
+        function applyFirmwareUpdate() {
+            if (currentRole !== "admin") return;
+            const fileInput = document.getElementById('firmwareFileInput');
+            if (!fileInput.files.length) {
+                alert("ERROR: Select a valid diagnostic package or HTML update file.");
+                return;
+            }
+
+            const file = fileInput.files[0];
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const fileContent = e.target.result;
+                localStorage.setItem('hub_firmware_update', fileContent);
+                alert(`SUCCESS: Flash package "${file.name}" uploaded to local memory system! Reloading...`);
+                location.reload();
+            };
+            reader.readAsText(file);
+        }
+
         function clearChat() {
             if (currentRole !== "admin") return;
-            const sysMsg = `<div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">Logs cleared by Administrator.</span></div>`;
+            const sysMsg = `<div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">Chat cleared by Administrator.</span></div>`;
             document.getElementById('chatFeed').innerHTML = sysMsg;
-            localStorage.setItem('hub_chat_history', sysMsg);
+            const storageKey = chatMode === 'ROOM' ? `hub_chat_room_${currentRoomKey}` : 'hub_chat_history';
+            localStorage.setItem(storageKey, sysMsg);
         }
 
         function sendBroadcast() {
             if (currentRole !== "admin") return;
-            const broadcastInput = document.getElementById('broadcastInput');
-            const msg = broadcastInput.value.trim();
+            const input = document.getElementById('broadcastInput');
+            const msg = input.value.trim();
             if (!msg) return;
 
-            const announcementHTML = `<div class="chat-msg" style="background: rgba(218, 54, 51, 0.2); padding: 6px; border-radius: 4px; border: 1px solid #da3633;"><span class="chat-user" style="color: #f78166;">[ANNOUNCEMENT]:</span> <span class="chat-text" style="color: #ffffff; font-weight: bold;">${msg}</span></div>`;
-            persistChatMessage(announcementHTML);
-            broadcastInput.value = '';
+            const html = `<div class="chat-msg" style="background: rgba(218, 54, 51, 0.2); padding: 5px; border-radius: 4px; border: 1px solid #da3633;"><span class="chat-user" style="color: #f78166;">[ANNOUNCEMENT]:</span> <span class="chat-text" style="color: #ffffff; font-weight: bold;">${msg}</span></div>`;
+            persistChatMessage(html);
+            input.value = '';
         }
 
         function nuclearReset() {
             if (currentRole !== "admin") return;
-            if (confirm("WARNING: Reset all local states, accounts, and chat history?")) {
-                localStorage.removeItem('hub_user_db');
-                localStorage.removeItem('hub_chat_history');
-                closeViewer();
-                clearChat();
-                alert("SYSTEM CLEARED & PURGED. Reloading...");
+            if (confirm("PURGE ALL DATA: Reset local storage, accounts, and chats?")) {
+                localStorage.clear();
+                alert("SYSTEM PURGED. Reloading...");
                 location.reload();
             }
         }
@@ -559,11 +699,107 @@
         function downloadPage() {
             const pageData = document.documentElement.outerHTML;
             const blob = new Blob([pageData], { type: 'text/html' });
-            const downloadLink = document.createElement('a');
-            downloadLink.href = URL.createObjectURL(blob);
-            downloadLink.download = 'offline_hub_v1.5.1.html';
-            downloadLink.click();
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'offline_hub_v1.5.0.html';
+            link.click();
         }
+
+        // 2-Player Local Canvas Combat Game Engine
+        const gCanvas = document.getElementById('gameArenaCanvas');
+        const gCtx = gCanvas.getContext('2d');
+
+        let p1 = { x: 50, y: 130, w: 20, h: 20, color: '#58a6ff', score: 0 };
+        let p2 = { x: 580, y: 130, w: 20, h: 20, color: '#f78166', score: 0 };
+        let bullets = [];
+        let keys = {};
+
+        window.addEventListener('keydown', e => keys[e.code] = true);
+        window.addEventListener('keyup', e => keys[e.code] = false);
+
+        function reset2PGame() {
+            p1.x = 50; p1.y = 130;
+            p2.x = 580; p2.y = 130;
+            bullets = [];
+        }
+
+        function update2PGame() {
+            // Player 1 WASD
+            if (keys['KeyW'] && p1.y > 0) p1.y -= 3;
+            if (keys['KeyS'] && p1.y < gCanvas.height - p1.h) p1.y += 3;
+            if (keys['KeyA'] && p1.x > 0) p1.x -= 3;
+            if (keys['KeyD'] && p1.x < gCanvas.width / 2 - p1.w) p1.x += 3;
+
+            // Player 2 Arrows
+            if (keys['ArrowUp'] && p2.y > 0) p2.y -= 3;
+            if (keys['ArrowDown'] && p2.y < gCanvas.height - p2.h) p2.y += 3;
+            if (keys['ArrowLeft'] && p2.x > gCanvas.width / 2) p2.x -= 3;
+            if (keys['ArrowRight'] && p2.x < gCanvas.width - p2.w) p2.x += 3;
+
+            // Shoot Space (P1) & Enter (P2)
+            if (keys['Space'] && !p1.cooldown) {
+                bullets.push({ x: p1.x + p1.w, y: p1.y + 8, vx: 6, owner: 1 });
+                p1.cooldown = true;
+                setTimeout(() => p1.cooldown = false, 250);
+            }
+
+            if (keys['Enter'] && !p2.cooldown) {
+                bullets.push({ x: p2.x, y: p2.y + 8, vx: -6, owner: 2 });
+                p2.cooldown = true;
+                setTimeout(() => p2.cooldown = false, 250);
+            }
+
+            // Move Bullets
+            for (let i = bullets.length - 1; i >= 0; i--) {
+                let b = bullets[i];
+                b.x += b.vx;
+
+                // Check Hits
+                if (b.owner === 1 && b.x >= p2.x && b.x <= p2.x + p2.w && b.y >= p2.y && b.y <= p2.y + p2.h) {
+                    p1.score++;
+                    reset2PGame();
+                    break;
+                }
+                if (b.owner === 2 && b.x <= p1.x + p1.w && b.x >= p1.x && b.y >= p1.y && b.y <= p1.y + p1.h) {
+                    p2.score++;
+                    reset2PGame();
+                    break;
+                }
+
+                if (b.x < 0 || b.x > gCanvas.width) bullets.splice(i, 1);
+            }
+
+            document.getElementById('gameScore').innerText = `P1 Score: ${p1.score} | P2 Score: ${p2.score}`;
+        }
+
+        function render2PGame() {
+            gCtx.clearRect(0, 0, gCanvas.width, gCanvas.height);
+
+            // Divider
+            gCtx.strokeStyle = '#30363d';
+            gCtx.beginPath();
+            gCtx.moveTo(gCanvas.width / 2, 0);
+            gCtx.lineTo(gCanvas.width / 2, gCanvas.height);
+            gCtx.stroke();
+
+            // P1 & P2
+            gCtx.fillStyle = p1.color;
+            gCtx.fillRect(p1.x, p1.y, p1.w, p1.h);
+
+            gCtx.fillStyle = p2.color;
+            gCtx.fillRect(p2.x, p2.y, p2.w, p2.h);
+
+            // Bullets
+            gCtx.fillStyle = '#f3e5f5';
+            bullets.forEach(b => gCtx.fillRect(b.x, b.y, 6, 4));
+        }
+
+        setInterval(() => {
+            if (document.getElementById('localGameCard').style.display === 'block') {
+                update2PGame();
+                render2PGame();
+            }
+        }, 1000 / 60);
     </script>
 </body>
 </html>
