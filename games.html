@@ -3,58 +3,89 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>System Diagnostic v1.4.0</title>
+    <title>System Diagnostic v1.5.0 (50th Edition)</title>
     <style>
-        body {
-            background-color: #000000;
-            color: #58a6ff;
-            font-family: 'Courier New', Courier, monospace;
-            padding: 40px;
-            line-height: 1.6;
+        :root {
+            --bg-color: #000000;
+            --accent-color: #58a6ff;
+            --border-color: #30363d;
+            --card-bg: #0d1117;
+            --text-color: #c9d1d9;
         }
-        h1 { color: #58a6ff; font-size: 24px; margin-bottom: 5px; }
-        .status { color: #7ee787; font-weight: bold; margin-bottom: 20px; }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--accent-color);
+            font-family: 'Courier New', Courier, monospace;
+            padding: 30px;
+            line-height: 1.6;
+            margin: 0;
+            position: relative;
+        }
+
+        /* Matrix Canvas Background */
+        #matrixCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            z-index: -1;
+            opacity: 0.15;
+            pointer-events: none;
+        }
+
+        .header-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 2px solid var(--border-color);
+            padding-bottom: 10px;
+            margin-bottom: 20px;
+        }
+
+        h1 { color: var(--accent-color); font-size: 24px; margin: 0; }
+        .status { color: #7ee787; font-weight: bold; }
         .log-entry { margin: 5px 0; font-size: 14px; color: #8b949e; }
+        
+        /* Buttons */
         .btn {
             display: inline-block;
-            padding: 10px 20px;
-            margin: 5px 5px 5px 0;
+            padding: 8px 16px;
+            margin: 4px 4px 4px 0;
             background: #161b22;
-            color: #c9d1d9;
+            color: var(--text-color);
             text-decoration: none;
-            border: 1px solid #30363d;
+            border: 1px solid var(--border-color);
             border-radius: 6px;
-            font-size: 14px;
+            font-size: 13px;
             transition: 0.2s;
-            box-sizing: border-box;
             cursor: pointer;
+            font-family: inherit;
         }
-        .btn:hover { background: #30363d; border-color: #8b949e; color: #ffffff; }
+        .btn:hover { background: #30363d; color: #ffffff; }
         
-        .btn-custom { border-color: #58a6ff; color: #58a6ff; }
-        .btn-custom:hover { background: #1f6feb; color: #ffffff; border-color: #58a6ff; }
+        .btn-custom { border-color: var(--accent-color); color: var(--accent-color); }
+        .btn-custom:hover { background: #1f6feb; color: #ffffff; }
 
         .btn-portal { border-color: #e36049; color: #f78166; }
-        .btn-portal:hover { background: #da3633; color: #ffffff; border-color: #f78166; }
+        .btn-portal:hover { background: #da3633; color: #ffffff; }
 
         .btn-stream { border-color: #238636; color: #3fb950; }
-        .btn-stream:hover { background: #238636; color: #ffffff; border-color: #2ea043; }
+        .btn-stream:hover { background: #238636; color: #ffffff; }
 
         .btn-comm { border-color: #8957e5; color: #a371f7; }
-        .btn-comm:hover { background: #8957e5; color: #ffffff; border-color: #a371f7; }
+        .btn-comm:hover { background: #8957e5; color: #ffffff; }
 
         .btn-dl { border-color: #d29922; color: #e3b341; }
-        .btn-dl:hover { background: #d29922; color: #ffffff; border-color: #e3b341; }
+        .btn-dl:hover { background: #d29922; color: #ffffff; }
         
-        .return-btn { background: #000000; color: #000000; border: 1px solid #000000; cursor: default; }
-        .return-btn:hover { background: #161b22; color: #c9d1d9; border-color: #30363d; }
-
         /* Embedded Player Frame */
         #gameViewerContainer {
             display: none;
             margin: 20px 0;
-            background: #0d1117;
-            border: 1px solid #30363d;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 8px;
             padding: 15px;
         }
@@ -66,50 +97,42 @@
             background: #000;
         }
 
-        /* Messaging Terminal Window */
+        /* Terminals */
         .messaging-card {
             display: none;
-            background: #0d1117;
-            border: 1px solid #30363d;
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
             border-radius: 6px;
             padding: 20px;
             margin-top: 15px;
             max-width: 650px;
         }
 
-        .chat-tabs {
-            display: flex;
-            gap: 10px;
-            margin-bottom: 10px;
-        }
+        .chat-tabs { display: flex; gap: 10px; margin-bottom: 10px; }
         .tab-btn {
             padding: 6px 12px;
             background: #161b22;
-            border: 1px solid #30363d;
+            border: 1px solid var(--border-color);
             color: #8b949e;
             border-radius: 4px;
             cursor: pointer;
             font-family: inherit;
             font-size: 12px;
         }
-        .tab-btn.active {
-            border-color: #a371f7;
-            color: #a371f7;
-            font-weight: bold;
-        }
+        .tab-btn.active { border-color: #a371f7; color: #a371f7; font-weight: bold; }
 
         .auth-group { display: flex; gap: 10px; margin-bottom: 15px; }
 
         .term-input {
             background: #161b22;
-            border: 1px solid #30363d;
+            border: 1px solid var(--border-color);
             color: #c9d1d9;
             padding: 8px 12px;
             border-radius: 4px;
             font-family: inherit;
             font-size: 13px;
         }
-        .term-input:focus { outline: none; border-color: #58a6ff; }
+        .term-input:focus { outline: none; border-color: var(--accent-color); }
 
         .chat-box {
             background: #010409;
@@ -126,21 +149,50 @@
         .chat-dm { color: #d29922; font-weight: bold; }
         .chat-text { color: #c9d1d9; }
         
-        hr { border: 0; border-top: 1px solid #30363d; margin: 25px 0; }
+        hr { border: 0; border-top: 1px solid var(--border-color); margin: 25px 0; }
         ul { list-style-type: none; padding: 0; }
         li { margin-bottom: 10px; }
-        li::before { content: "• "; color: #58a6ff; }
+        li::before { content: "• "; color: var(--accent-color); }
+
+        /* Stealth Cover Overlay */
+        #panicOverlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            background: #ffffff;
+            color: #000000;
+            font-family: Arial, sans-serif;
+            padding: 40px;
+            box-sizing: border-box;
+            z-index: 9999;
+        }
     </style>
 </head>
 <body>
-    <h1>> SYSTEM_DIAGNOSTIC_v1.4.0</h1>
-    <div class="status">Status: ENCRYPTED_CONNECTION_ACTIVE // BUILD_STABLE</div>
-    
-    <div class="log-entry">> Initializing local environment...</div>
-    <div class="log-entry">> In-tab view rendering engine: ONLINE.</div>
-    <div class="log-entry">> Local message filter and routing active.</div>
+    <canvas id="matrixCanvas"></canvas>
 
-    <hr>
+    <div class="header-bar">
+        <div>
+            <h1>> SYSTEM_DIAGNOSTIC_v1.5.0 [50th ANNIVERSARY]</h1>
+            <div class="status">Status: ENCRYPTED // MATRIX_ENGINE: ACTIVE</div>
+        </div>
+        <div style="text-align: right; font-size: 12px; color: #8b949e;">
+            <div id="sysClock">TIME: --:--:--</div>
+            <div>CPU: <span id="fakeCpu">12%</span> | RAM: <span id="fakeRam">1.4GB</span></div>
+            <div style="color: #f78166; margin-top: 4px;">Press [ESC] for Panic Mode</div>
+        </div>
+    </div>
+
+    <!-- Theme Switcher -->
+    <div style="margin-bottom: 15px;">
+        <span class="log-entry">> Visual Matrix Theme: </span>
+        <button class="btn" style="padding: 2px 8px; font-size: 11px;" onclick="setTheme('default')">Cyber Blue</button>
+        <button class="btn" style="padding: 2px 8px; font-size: 11px; border-color: #2ea043; color: #3fb950;" onclick="setTheme('matrix')">Matrix Green</button>
+        <button class="btn" style="padding: 2px 8px; font-size: 11px; border-color: #da3633; color: #f78166;" onclick="setTheme('blood')">Blood Red</button>
+    </div>
 
     <!-- Embedded In-Tab Viewer -->
     <div id="gameViewerContainer">
@@ -165,7 +217,7 @@
         <li><button class="btn btn-portal" onclick="launchInTab('https://sites.google.com/view/drive-u-7-home/cookie-clicker', 'Cookie Clicker')">Module_02 (Cookie Clicker)</button></li>
         <li><button class="btn btn-portal" onclick="launchInTab('https://sites.google.com/view/drive-u-7-home/moto-x3m-3', 'Moto X3M')">Module_03 (Moto X3M)</button></li>
         <li><button class="btn btn-portal" onclick="launchInTab('https://sites.google.com/view/drive-u-7-home/snow-rider-3d', 'Snow Rider 3D')">Module_04 (Snow Rider 3D)</button></li>
-        <li><button class="btn btn-portal" onclick="launchInTab('https://sites.google.com/view/drive-u-7-home/run-3', 'Run 3')">Module_05 (Run 3 Protocol)</button></li>
+        <li><button class="btn btn-portal" onclick="launchInTab('https://sites.google.com/view/drive-u-7-home/run-3', 'Run 3 Protocol')">Module_05 (Run 3 Protocol)</button></li>
         <li><button class="btn" onclick="launchInTab('https://slope3unblocked.github.io/', 'Slope Engine')">Module_06 (Slope)</button></li>
         <li><button class="btn" onclick="launchInTab('https://1v1.lol/', '1v1 Tactical')">Module_07 (1v1.LOL)</button></li>
         <li><button class="btn" onclick="launchInTab('https://retrobowl.me/', 'Retro Bowl Strategy')">Module_08 (Retro Bowl)</button></li>
@@ -184,16 +236,16 @@
 
     <hr>
     
+    <!-- System Navigation Options -->
     <div class="log-entry">> System navigation options:</div>
     <button class="btn btn-comm" onclick="toggleMessaging()">Initialize Encrypted Comms Terminal</button>
+    <button id="adminAccessBtn" class="btn btn-portal" style="display: none;" onclick="toggleAdminPanel()">Initialize Admin Control Terminal</button>
     <button class="btn btn-dl" onclick="downloadPage()">Download Offline Hub</button>
-    <a href="index.html" class="btn return-btn">Return to Primary Hub</a>
 
     <!-- Encrypted Messaging Window -->
     <div id="messagingPanel" class="messaging-card">
-        <p style="margin-top: 0; color: #a371f7; font-weight: bold;">// SECURE_COMMUNICATIONS_NODE v1.4.0 //</p>
+        <p style="margin-top: 0; color: #a371f7; font-weight: bold;">// SECURE_COMMUNICATIONS_NODE v1.5.0 //</p>
         
-        <!-- Local Account Auth Section -->
         <div id="authContainer" class="auth-group">
             <input type="text" id="usernameInput" class="term-input" placeholder="Handle / Alias">
             <input type="password" id="passwordInput" class="term-input" placeholder="Access Code (e.g. 6767)">
@@ -204,65 +256,160 @@
             > Session Active: <span id="activeUserDisplay"></span>
         </div>
 
-        <!-- Mode Toggle Tabs -->
         <div class="chat-tabs">
             <button class="tab-btn active" id="tabPublic" onclick="setChatMode('PUBLIC')">PM (Public Message)</button>
             <button class="tab-btn" id="tabDM" onclick="setChatMode('DM')">DM (Direct Message)</button>
         </div>
 
-        <!-- Recipient input for DMs -->
         <div id="dmTargetContainer" style="display: none; margin-bottom: 10px;">
             <input type="text" id="dmTargetInput" class="term-input" style="width: 100%; box-sizing: border-box;" placeholder="Enter Recipient Handle for DM...">
         </div>
 
-        <!-- Chat Feed -->
         <div id="chatFeed" class="chat-box">
-            <div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">v1.4.0 active. Moderation filter online.</span></div>
+            <div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">v1.5.0 active. Moderation filter online.</span></div>
         </div>
 
-        <!-- Message Input -->
         <div class="auth-group" style="margin-bottom: 0;">
             <input type="text" id="msgInput" class="term-input" style="flex: 1;" placeholder="Enter encrypted packet..." disabled>
             <button id="sendBtn" class="btn" style="padding: 8px 15px; margin: 0;" onclick="sendMessage()" disabled>Send</button>
         </div>
     </div>
 
-    <script>
-        let currentUser = null;
-        let chatMode = 'PUBLIC'; // 'PUBLIC' or 'DM'
+    <!-- Admin Control Terminal -->
+    <div id="adminPanel" class="messaging-card" style="border-color: #da3633;">
+        <p style="margin-top: 0; color: #f78166; font-weight: bold;">// ADMIN_COMMAND_OVERRIDE_TERMINAL v1.5.0 //</p>
+        
+        <div id="adminControls">
+            <div class="log-entry" style="color: #7ee787; margin-bottom: 15px;">
+                > ROOT_PRIVILEGES_GRANTED // Active Admin: <span id="adminUserDisplay"></span>
+            </div>
 
-        // Basic censorship list for auto-moderation
-        const badWords = ["badword1", "badword2", "fuck", "shit", "bitch", "ass"];
+            <p style="color: #c9d1d9; font-size: 13px;">Execute Admin Commands:</p>
+            
+            <div style="display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 15px;">
+                <button class="btn btn-portal" onclick="clearChat()">Clear Chat Logs</button>
+                <button class="btn btn-portal" onclick="nuclearReset()">Nuclear State Reset</button>
+            </div>
+
+            <div class="auth-group" style="margin-bottom: 0;">
+                <input type="text" id="broadcastInput" class="term-input" style="flex: 1;" placeholder="System Announcement text...">
+                <button class="btn btn-portal" style="padding: 8px 15px; margin: 0;" onclick="sendBroadcast()">Broadcast</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Disguise Mask -->
+    <div id="panicOverlay">
+        <h1 style="color: #000; font-family: Arial, sans-serif;">World History: Chapter 4 Summary</h1>
+        <hr>
+        <p><strong>Topic:</strong> The Economic Impact of the Industrial Revolution</p>
+        <p>The Industrial Revolution marked a major turning point in history; almost every aspect of daily life was influenced in some way. In particular, average income and population began to exhibit unprecedented sustained growth.</p>
+        <p><em>Click anywhere to return to working document...</em></p>
+    </div>
+
+    <script>
+        // Accounts Database
+        const userDatabase = {
+            "phxntom": { pass: "6767", role: "admin" },
+            "guest1":  { pass: "1234", role: "user"  },
+            "student": { pass: "0000", role: "user"  }
+        };
+
+        let currentUser = null;
+        let currentRole = "user";
+        let chatMode = 'PUBLIC';
+
+        const badWords = ["ass", "bastard", "bitch", "cock", "crap", "cunt", "dick", "fuck", "hoe", "nigga", "nigger", "piss", "pussy", "shit", "shitstain", "slut", "wench"];
 
         function filterText(text) {
+            if (!text) return "";
             let filtered = text;
             badWords.forEach(word => {
-                const regex = new RegExp(word, "gi");
-                filtered = filtered.replace(regex, "****");
+                const regex = new RegExp(`\\b${word}\\b`, "gi");
+                filtered = filtered.replace(regex, match => "*".repeat(match.length));
             });
             return filtered;
+        }
+
+        // Clock & Fake Performance Telemetry
+        setInterval(() => {
+            const now = new Date();
+            document.getElementById('sysClock').innerText = `TIME: ${now.toLocaleTimeString()}`;
+            document.getElementById('fakeCpu').innerText = `${Math.floor(Math.random() * 15) + 8}%`;
+            document.getElementById('fakeRam').innerText = `${(Math.random() * 0.4 + 1.2).toFixed(1)}GB`;
+        }, 1000);
+
+        // Matrix Background Rain Engine
+        const canvas = document.getElementById('matrixCanvas');
+        const ctx = canvas.getContext('2d');
+        canvas.width = window.innerWidth;
+        canvas.height = window.innerHeight;
+        const chars = '01ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        const drops = Array(Math.floor(canvas.width / 20)).fill(1);
+
+        function drawMatrix() {
+            ctx.fillStyle = 'rgba(0, 0, 0, 0.05)';
+            ctx.fillRect(0, 0, canvas.width, canvas.height);
+            ctx.fillStyle = '#58a6ff';
+            ctx.font = '15px monospace';
+
+            for (let i = 0; i < drops.length; i++) {
+                const text = chars.charAt(Math.floor(Math.random() * chars.length));
+                ctx.fillText(text, i * 20, drops[i] * 20);
+                if (drops[i] * 20 > canvas.height && Math.random() > 0.975) drops[i] = 0;
+                drops[i]++;
+            }
+        }
+        setInterval(drawMatrix, 50);
+
+        // Panic Key Listener
+        window.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const overlay = document.getElementById('panicOverlay');
+                overlay.style.display = (overlay.style.display === 'block') ? 'none' : 'block';
+            }
+        });
+        document.getElementById('panicOverlay').addEventListener('click', () => {
+            document.getElementById('panicOverlay').style.display = 'none';
+        });
+
+        // Theme Customizer
+        function setTheme(theme) {
+            const root = document.documentElement;
+            if (theme === 'matrix') {
+                root.style.setProperty('--accent-color', '#3fb950');
+                root.style.setProperty('--border-color', '#238636');
+            } else if (theme === 'blood') {
+                root.style.setProperty('--accent-color', '#f78166');
+                root.style.setProperty('--border-color', '#da3633');
+            } else {
+                root.style.setProperty('--accent-color', '#58a6ff');
+                root.style.setProperty('--border-color', '#30363d');
+            }
         }
 
         function launchInTab(url, title) {
             const container = document.getElementById('gameViewerContainer');
             const iframe = document.getElementById('gameFrame');
-            const titleDisplay = document.getElementById('activeModuleTitle');
-
-            titleDisplay.innerText = `> ACTIVE_MODULE: ${title.toUpperCase()}`;
+            document.getElementById('activeModuleTitle').innerText = `> ACTIVE_MODULE: ${title.toUpperCase()}`;
             iframe.src = url;
             container.style.display = 'block';
             container.scrollIntoView({ behavior: 'smooth' });
         }
 
         function closeViewer() {
-            const container = document.getElementById('gameViewerContainer');
-            const iframe = document.getElementById('gameFrame');
-            iframe.src = '';
-            container.style.display = 'none';
+            document.getElementById('gameFrame').src = '';
+            document.getElementById('gameViewerContainer').style.display = 'none';
         }
 
         function toggleMessaging() {
             const panel = document.getElementById('messagingPanel');
+            panel.style.display = (panel.style.display === 'none' || panel.style.display === '') ? 'block' : 'none';
+        }
+
+        function toggleAdminPanel() {
+            if (currentRole !== "admin") return;
+            const panel = document.getElementById('adminPanel');
             panel.style.display = (panel.style.display === 'none' || panel.style.display === '') ? 'block' : 'none';
         }
 
@@ -277,30 +424,35 @@
             const user = document.getElementById('usernameInput').value.trim();
             const pass = document.getElementById('passwordInput').value.trim();
 
-            if (user !== "" && pass !== "") {
+            if (userDatabase[user] && userDatabase[user].pass === pass) {
                 currentUser = user;
+                currentRole = userDatabase[user].role;
+
                 document.getElementById('authContainer').style.display = 'none';
-                document.getElementById('activeUserDisplay').innerText = currentUser;
+                document.getElementById('activeUserDisplay').innerText = `${currentUser} [${currentRole.toUpperCase()}]`;
                 document.getElementById('userStatus').style.display = 'block';
                 
                 document.getElementById('msgInput').disabled = false;
                 document.getElementById('sendBtn').disabled = false;
 
+                if (currentRole === "admin") {
+                    document.getElementById('adminAccessBtn').style.display = 'inline-block';
+                    document.getElementById('adminUserDisplay').innerText = currentUser;
+                }
+
                 const feed = document.getElementById('chatFeed');
-                feed.innerHTML += `<div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">Welcome, ${currentUser}. Dynamic local session authorized.</span></div>`;
+                feed.innerHTML += `<div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">Welcome, ${currentUser}. Session authorized as ${currentRole.toUpperCase()}.</span></div>`;
                 feed.scrollTop = feed.scrollHeight;
             } else {
-                alert('ACCESS DENIED: Please enter both a Handle and an Access Code.');
+                alert('ACCESS DENIED: Invalid Handle or Access Code.');
             }
         }
 
         function sendMessage() {
             const msgField = document.getElementById('msgInput');
             const rawMsg = msgField.value.trim();
-
             if (!rawMsg || !currentUser) return;
 
-            // Apply censor filter
             const cleanMsg = filterText(rawMsg);
             const feed = document.getElementById('chatFeed');
 
@@ -315,34 +467,40 @@
             msgField.value = '';
         }
 
+        function clearChat() {
+            if (currentRole !== "admin") return;
+            document.getElementById('chatFeed').innerHTML = `<div class="chat-msg"><span class="chat-user">[SYSTEM]:</span> <span class="chat-text">Logs cleared by Administrator.</span></div>`;
+        }
+
+        function sendBroadcast() {
+            if (currentRole !== "admin") return;
+            const broadcastInput = document.getElementById('broadcastInput');
+            const msg = broadcastInput.value.trim();
+            if (!msg) return;
+
+            const feed = document.getElementById('chatFeed');
+            feed.innerHTML += `<div class="chat-msg" style="background: rgba(218, 54, 51, 0.2); padding: 6px; border-radius: 4px; border: 1px solid #da3633;"><span class="chat-user" style="color: #f78166;">[ANNOUNCEMENT]:</span> <span class="chat-text" style="color: #ffffff; font-weight: bold;">${msg}</span></div>`;
+            feed.scrollTop = feed.scrollHeight;
+            broadcastInput.value = '';
+        }
+
+        function nuclearReset() {
+            if (currentRole !== "admin") return;
+            if (confirm("WARNING: Reset all local states and close active streams?")) {
+                closeViewer();
+                clearChat();
+                alert("SYSTEM CLEARED & PURGED.");
+            }
+        }
+
         function downloadPage() {
             const pageData = document.documentElement.outerHTML;
             const blob = new Blob([pageData], { type: 'text/html' });
             const downloadLink = document.createElement('a');
-            
             downloadLink.href = URL.createObjectURL(blob);
-            downloadLink.download = 'offline_hub_v1.4.0.html';
+            downloadLink.download = 'offline_hub_v1.5.0.html';
             downloadLink.click();
         }
     </script>
 </body>
 </html>
-// Moderation filter list
-const badWords = [
-    "ass", "bastard", "bitch", "cock", "crap", "cunt", 
-    "dick", "fuck", "hoe", "nigga", "nigger", "piss", 
-    "pussy", "shit", "shitstain", "slut", "wench"
-];
-
-function filterText(text) {
-    if (!text) return "";
-    let filtered = text;
-
-    badWords.forEach(word => {
-        // \b matches exact word boundaries, 'gi' handles case-insensitivity
-        const regex = new RegExp(`\\b${word}\\b`, "gi");
-        filtered = filtered.replace(regex, match => "*".repeat(match.length));
-    });
-
-    return filtered;
-}
